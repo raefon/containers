@@ -31,9 +31,6 @@ jobs:
     needs: simple-checks
     uses: raefon/containers/.github/workflows/build-images.yaml@main
     secrets: inherit
-    permissions:
-      packages: write
-      contents: read
     with:
       appsToBuild: ${{ inputs.appsToBuild }}
       force: ${{ inputs.force == true }}
