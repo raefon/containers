@@ -18,7 +18,7 @@ RUN \
     && go install -ldflags="-s -w" github.com/drone/envsubst/cmd/envsubst@latest \
     && upx /go/bin/envsubst
 
-FROM docker.io/library/ubuntu:${VERSION}
+FROM docker.io/library/ubuntu:jammy
 ARG VERSION
 ARG CHANNEL
 ARG TARGETPLATFORM
