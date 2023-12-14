@@ -94,7 +94,6 @@ jobs:
       matrix:
         image: ["${{ fromJSON(needs.prepare.outputs.matrices).imagePlatforms }}"]
     permissions:
-      packages: write
       contents: read
     steps:
       - name: Lowercase repository owner
