@@ -94,6 +94,7 @@ jobs:
       matrix:
         image: ["${{ fromJSON(needs.prepare.outputs.matrices).imagePlatforms }}"]
     permissions:
+      package: write
       contents: read
     steps:
       - name: Lowercase repository owner
@@ -142,7 +143,6 @@ jobs:
         with:
           app-id: "${{ secrets.BOT_APP_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
-          owner: ${{ github.repository_owner }}
 
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
