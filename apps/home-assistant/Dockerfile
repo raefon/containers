@@ -68,7 +68,7 @@ RUN \
 
 #hadolint ignore=DL3018,DL3013,DL3059
 RUN \
-    pip install --upgrade \
+    pip install --break-system-packages --upgrade \
         cython \
         pip \
         pyparsing \
