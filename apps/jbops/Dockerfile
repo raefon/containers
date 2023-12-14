@@ -29,14 +29,14 @@ RUN apk add --no-cache \
         py3-pip \
         git \
     && \
-    pip install --upgrade pip \
+    pip install --break-system-packages --upgrade pip \
     && git clone https://github.com/blacktwin/JBOPS.git . \
     && if [ -n "${VERSION}" ]; then \
         NUMBER_COMMITS_TO_REVERT=$(( $(git rev-list --count --first-parent HEAD) - $(echo "${VERSION}" | cut -d "." -f3) )); \
         git checkout "master~${NUMBER_COMMITS_TO_REVERT}"; \
     fi \
     && \
-    pip install --upgrade --requirement /app/requirements.txt \
+    pip install --break-system-packages --upgrade --requirement /app/requirements.txt \
     && apk del --purge .build-deps \
     && chown -R root:root /app \
     && chmod -R 755 /app \
