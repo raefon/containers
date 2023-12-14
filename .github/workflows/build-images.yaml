@@ -93,8 +93,6 @@ jobs:
       fail-fast: false
       matrix:
         image: ["${{ fromJSON(needs.prepare.outputs.matrices).imagePlatforms }}"]
-    permissions:
-      contents: read
     steps:
       - name: Lowercase repository owner
         shell: bash
