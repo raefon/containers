@@ -1,0 +1,4 @@
+.goss
+.private
+**/*.pyc
+**/.DS_Store
