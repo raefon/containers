@@ -30,9 +30,9 @@ RUN \
     && \
     apk add --no-cache --virtual .build-deps py3-pip make gcc g++ python3-dev \
     && \
-    pip install --upgrade pip \
+    pip install --break-system-packages --upgrade pip \
     && \
-    pip install --upgrade \
+    pip install --break-system-packages --upgrade \
         plexapi \
         pycryptodomex \
     && apk del --purge .build-deps \
