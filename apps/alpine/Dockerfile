@@ -56,8 +56,10 @@ RUN \
 #hadolint ignore=DL3018
 RUN \
     addgroup -S kah --gid 568 \
+        && addgroup -S render --gid 109 \
         && adduser -S kah -G kah --uid 568 \
         && adduser kah video \
+        && adduser kah render \
     && \
     mkdir -p /config \
     && chown -R kah:kah /config \
