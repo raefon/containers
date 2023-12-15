@@ -46,7 +46,7 @@ RUN \
     && \
     groupadd --gid 109 render \
     && \
-    gpasswd -a kah video render \
+    usermod -a -G video,render kah \
     && \
     mkdir -p /config \
     && chown -R kah:kah /config \
