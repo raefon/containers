@@ -44,7 +44,9 @@ RUN \
         --disabled-password \
         --no-create-home \
     && \
-    gpasswd -a kah video \
+    groupadd --gid 109 render \
+    && \
+    gpasswd -a kah video render \
     && \
     mkdir -p /config \
     && chown -R kah:kah /config \
