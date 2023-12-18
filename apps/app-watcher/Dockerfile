@@ -19,9 +19,8 @@ RUN \
     	make \
     	g++ \
     	texinfo \
-    	py3-pip
-    && \
-		git clone https://github.com/emcrisostomo/fswatch.git \
+    	py3-pip \
+	&& git clone https://github.com/emcrisostomo/fswatch.git \
 	&& cd fswatch \
 	&& git checkout ${VERSION} \
     && ./automake.sh --force \
