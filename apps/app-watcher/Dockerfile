@@ -31,6 +31,7 @@ RUN \
 FROM public.ecr.aws/docker/library/alpine:3.19.0
 COPY --from=build /usr/local/bin/fswatch /usr/local/bin/fswatch
 
-COPY scripts/* /usr/local/bin
-RUN chmod +x /usr/local/bin/*
+COPY ./apps/app-watcher/app-watcher.sh /usr/local/bin/app-watcher.sh
+RUN chmod +x /usr/local/bin/app-watcher.sh
+RUN mkdir -p /app-watcher
 CMD ["/usr/local/bin/app-watcher.sh"]
