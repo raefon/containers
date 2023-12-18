@@ -23,9 +23,9 @@ RUN \
 	&& git clone https://github.com/emcrisostomo/fswatch.git \
 	&& cd fswatch \
 	&& git checkout ${VERSION} \
-    && ./automake.sh --force \
+    && ./autogen.sh --force \
     && ./configure \
-    && make \
+    && make -j \
     && make install
 
 FROM public.ecr.aws/docker/library/alpine:3.19.0
