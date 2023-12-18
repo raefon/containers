@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/alpine:3.19.0 as build
+FROM public.ecr.aws/docker/library/alpine:3.19.0
 ARG TARGETARCH
 ARG VERSION
 WORKDIR /tmp
@@ -27,9 +27,6 @@ RUN \
     && ./configure \
     && make -j \
     && make install
-
-FROM public.ecr.aws/docker/library/alpine:3.19.0
-COPY --from=build /usr/local/bin/fswatch /usr/local/bin/fswatch
 
 COPY ./apps/app-watcher/app-watcher.sh /usr/local/bin/app-watcher.sh
 RUN apk add --no-cache bash
