@@ -22,10 +22,11 @@ sleep 10
 echo "APP: ${APP}"
 echo "Launched command: ${COMMAND}"
 
-#if [[ "$APP" = "filebrowser" ]] && [[ "$COMMAND" = "restart" ]]
-#	echo "Cant restart filebrowser"
-#	exit 1
-#fi
+if [[ "$APP" = "filebrowser" ]] && [[ "$COMMAND" = "restart" ]]
+	echo "Cant restart filebrowser"
+	rm -f ${watcher} > /dev/null 2>&1
+	exit 1
+fi
 
 if [[ "$COMMAND" = "restart" ]] ; then
 	echo "Restarting app"
@@ -45,6 +46,11 @@ if [[ "$COMMAND" = "restart" ]] ; then
 elif [[ "$COMMAND" = "reset" ]] ; then
 	echo "Resetting app"
 else
-	echo "ERROR: Unknow command"
+	echo "ERROR: Unknown command... exiting"
+	rm -f ${watcher} > /dev/null 2>&1
 	exit 1
 fi
+
+# remove file anyways
+rm -f ${watcher} > /dev/null 2>&1
+exit 0
