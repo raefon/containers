@@ -32,7 +32,7 @@ FROM public.ecr.aws/docker/library/alpine:3.19.0
 COPY --from=build /usr/local/bin/fswatch /usr/local/bin/fswatch
 
 COPY ./apps/app-watcher/app-watcher.sh /usr/local/bin/app-watcher.sh
-RUN apk add --no-cache bash libgcc libstdc++
+RUN apk add --no-cache bash libgcc libstdc++ curl openssl ca-certificates
 RUN chmod +x /usr/local/bin/app-watcher.sh
 RUN mkdir -p /app-watcher
 CMD ["/usr/local/bin/app-watcher.sh"]
