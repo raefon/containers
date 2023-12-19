@@ -22,8 +22,8 @@ sleep 10
 echo "APP: ${APP}"
 echo "Launched command: ${COMMAND}"
 
-if [[ "$APP" = "filebrowser" ]] && [[ "$COMMAND" = "restart" ]]
-	echo "Cant restart filebrowser"
+if [[ "$APP" = "filebrowser" ]] && [[ "$COMMAND" = "restart" ]] ; then
+	echo "Cant restart filebrowser... exiting"
 	rm -f ${watcher} > /dev/null 2>&1
 	exit 1
 fi
