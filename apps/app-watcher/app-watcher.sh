@@ -29,7 +29,7 @@ echo "Launched command: ${COMMAND}"
 
 if [[ "$COMMAND" = "restart" ]] ; then
 	echo "Restarting app"
-	curl --cacert ${CACERT} --header "Authorization: Bearer ${TOKEN}" -X PATCH '${APISERVER}/apis/apps/vi/namespaces/${NAMESPACE}/deployments/tenet-${APP}?fieldManager=kubectl-rollout&pretty=true' \
+	curl --cacert ${CACERT} --header "Authorization: Bearer ${TOKEN}" -X PATCH "${APISERVER}/apis/apps/vi/namespaces/${NAMESPACE}/deployments/tenet-${APP}?fieldManager=kubectl-rollout&pretty=true" \
 	--header 'Content-Type: application/strategic-merge-patch+json' \
 	--data-raw '{
 		"spec": {
