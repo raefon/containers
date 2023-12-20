@@ -23,7 +23,7 @@ if [[ ! -f "/config/filebrowser/filebrowser.db" ]]; then
         --cache-dir /tmp \
         --port 80
     # allow commands
-    /filebrowser config set --database /config/filebrowser/filebrowser.db --commands zip,unzip,rar,unrar,ls,pwd,cd,mv,cp,ln,find,echo,grep,cat,touch,tar,gzip,rm,tree,du,mlocate,updatedb,locate,claim-plex-server.sh
+    /filebrowser config set --database /config/filebrowser/filebrowser.db --commands zip,unzip,rar,unrar,ls,pwd,cd,mv,cp,ln,find,echo,grep,cat,touch,tar,gzip,rm,tree,du,mlocate,updatedb,locate,tenet
     # add bogus user
     /filebrowser users add 1 bogus --database /config/filebrowser/filebrowser.db
 fi

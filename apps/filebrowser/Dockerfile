@@ -20,7 +20,8 @@ COPY ./apps/filebrowser/entrypoint.sh /entrypoint.sh
 RUN apk add --no-cache mlocate ncdu tree curl &&\
 	chmod 777 /srv &&\
 	chmod +x /entrypoint.sh \ 
-				/usr/local/bin/claim-plex-server.sh
+				/usr/local/bin/claim-plex-server.sh \
+				/usr/local/bin/tenet
 
 USER kah
 CMD ["/entrypoint.sh"]
