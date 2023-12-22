@@ -4,7 +4,7 @@
 test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
 test -f "/scripts/vpn.sh" && source "/scripts/vpn.sh"
 
-downloadsPath="/downloads"
+downloadsPath="/data/Downloads"
 
 if [[ -z "$QBITTORRENT__USE_PROFILE" ]]; then
     configFolder="/config"
@@ -27,11 +27,18 @@ if [[ ! -f "$qbtConfigFile" ]]; then
 [BitTorrent]
 Session\DefaultSavePath=$downloadsPath
 Session\Port=$QBITTORRENT__BT_PORT
-Session\TempPath=$downloadsPath/temp
+Session\MaxConnections=250
+Session\MaxConnectionsPerTorrent=50
+Session\MaxUploads=10
+Session\MaxUploadsPerTorrent=2
+Session\Port=6881
+Session\TempPath=$downloadsPath/incomplete
+Session\TempPathEnabled=true
 [Preferences]
 WebUI\HostHeaderValidation=false
 WebUI\UseUPnP=false
 WebUI\LocalHostAuth=false
+WebUI\AuthSubnetWhitelist=10.40.1.0/24
 [LegalNotice]
 Accepted=true
 EOF
