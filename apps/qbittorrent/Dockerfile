@@ -33,10 +33,12 @@ RUN \
     && chmod -R 755 /app/qbittorrent-nox \
     && rm -rf /tmp/*
 
-USER kah
-
 COPY ./apps/qbittorrent/config.py /scripts/config.py
+COPY ./apps/qbittorrent/torrent_unrar.sh /scripts/torrent_unrar.sh
 COPY ./apps/qbittorrent/entrypoint.sh /entrypoint.sh
+RUN chmod +x /scripts/*.sh
+
+USER kah
 
 CMD ["/entrypoint.sh"]
 

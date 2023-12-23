@@ -24,6 +24,9 @@ fi
 if [[ ! -f "$qbtConfigFile" ]]; then
     mkdir -p "$(dirname $qbtConfigFile)"
     cat << EOF > "$qbtConfigFile"
+[AutoRun]
+enabled=true
+program=/scripts/torrent_unrar.sh \"%n\" \"%f\"
 [BitTorrent]
 Session\DefaultSavePath=$downloadsPath
 Session\Port=$QBITTORRENT__BT_PORT
