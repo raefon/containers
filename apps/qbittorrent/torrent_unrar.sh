@@ -1,41 +1,42 @@
 #!/bin/bash
 
-LOG_FILE=/config/qBittorrent/logs/torrent_unrar.log
-TORRENT_DIR=$1
-TR_TORRENT_NAME=$2
+LOG="/config/qBittorrent/log/torrent_unrar.log"
+TR_TORRENT_NAME="$1"
+TR_TORRENT_DIR="$2"
+UNRAR_STAGING="/data/Downloads/unrar_staging"
 
-NOW=$(date +%Y-%m-%d\ %H:%M:%S)
-
-SRC_DIR="${TORRENT_DIR}/${TR_TORRENT_NAME}"
-DEST_DIR="${TORRENT_DIR}/${TR_TORRENT_NAME}"
-
-cd $SRC_DIR
-
-IFS=$'\n'
-
-unset RAR_FILES i
-
-for RAR_FILE in $( find "$SRC_DIR" -iname "*.rar" ); do
-
-if [[ $RAR_FILE =~ .*part.*.rar ]]; then
-
-  if [[ $RAR_FILE =~ .*part0*1.rar ]]; then
-
-    RAR_FILES[i++]=$RAR_FILE
-
+# The script could use more tesing, but it works well for my needs
+function extract_rar() {
+  isRar=$(ls | grep *.rar)
+  if [ -n "$isRar" ]; then
+    # Handle an edge case with some distributors
+    isPart01="$(ls *.rar | egrep -i 'part01.rar|part1.rar')"
+    if [ -n "$isPart01" ]; then
+      isRar=$isPart01
+    fi
+    toUnrar="$(pwd)/$isRar"
+    # we need to move to new location so sonarr doesn't try to mv before its done
+    # also, unrar doesn't support changing the filename on extracting, makes sense a little bit
+    pushd ${UNRAR_STAGING}
+    fileName="$(unrar e -y $toUnrar | egrep "^\.\.\..*OK" | awk '{ print $2 }')"
+    # put it back so sonarr can now find it
+    mv $fileName $(dirname $toUnrar)
+    popd
   fi
+}
 
-done
+echo "Starting  - $(date)" >> $LOG
+echo "${TR_TORRENT_NAME}" >> $LOG
 
-unset IFS
+cd "$TR_TORRENT_DIR"
 
-if [ ${#RAR_FILES} -gt 0 ]; then
-
-for RAR_FILE in "${RAR_FILES[@]}"; do
-  unrar x -inul "$RAR_FILE" "$DEST_DIR"
-done
-echo $NOW "Unrarred $TR_TORRENT_NAME" >> $LOG_FILE
-
-fi
-
+if [ -d "$TR_TORRENT_NAME" ]; then
+  cd "$TR_TORRENT_NAME"
+  #handle multiple episode packs, like those that contain a whole season, or just a single episode
+  for rar in $(find . -name '*.rar' -exec dirname {} \; | sort -u);
+  do
+    pushd $rar
+    extract_rar
+    popd
+  done
 fi
