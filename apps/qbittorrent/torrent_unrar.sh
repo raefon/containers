@@ -1,9 +1,15 @@
 #!/bin/bash
 
-LOG="/config/qBittorrent/log/torrent_unrar.log"
+LOG="/config/qBittorrent/logs/torrent_unrar.log"
 TR_TORRENT_NAME="$1"
 TR_TORRENT_DIR="$2"
-UNRAR_STAGING="/data/Downloads/unrar_staging"
+UNRAR_STAGING="/data/unrar_staging"
+
+# check if log file exists
+[ ! test -f "${LOG}" ] && touch ${LOG}
+
+# check if unrar_staging exists
+[ ! -d "${UNRAR_STAGING}" ] && mkdir -p ${UNRAR_STAGING}
 
 # The script could use more tesing, but it works well for my needs
 function extract_rar() {
