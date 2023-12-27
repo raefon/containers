@@ -6,7 +6,7 @@ TR_TORRENT_DIR="$2"
 UNRAR_STAGING="/data/unrar_staging"
 
 # check if log file exists
-[ ! test -f "${LOG}" ] && touch ${LOG}
+[ ! -f "${LOG}" ] && touch ${LOG}
 
 # check if unrar_staging exists
 [ ! -d "${UNRAR_STAGING}" ] && mkdir -p ${UNRAR_STAGING}
