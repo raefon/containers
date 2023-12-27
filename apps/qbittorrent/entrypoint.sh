@@ -37,6 +37,8 @@ Session\MaxUploadsPerTorrent=2
 Session\Port=6881
 Session\TempPath=$downloadsPath/incomplete
 Session\TempPathEnabled=true
+Session\MaxActiveTorrents=-1
+Session\MaxActiveUploads=-1
 [Preferences]
 WebUI\HostHeaderValidation=false
 WebUI\UseUPnP=false
