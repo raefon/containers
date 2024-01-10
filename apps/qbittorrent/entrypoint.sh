@@ -43,7 +43,7 @@ Session\MaxActiveUploads=-1
 WebUI\HostHeaderValidation=false
 WebUI\UseUPnP=false
 WebUI\LocalHostAuth=false
-WebUI\AuthSubnetWhitelist=10.40.1.0/24
+WebUI\AuthSubnetWhitelist=10.0.0.0/8
 WebUI\AuthSubnetWhitelistEnabled=true
 [LegalNotice]
 Accepted=true
