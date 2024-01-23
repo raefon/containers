@@ -2,3 +2,5 @@
 .private
 **/*.pyc
 **/.DS_Store
+.vs
+.vscode

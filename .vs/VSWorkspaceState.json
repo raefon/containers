@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\apps",
+    "\\apps\\sonarr",
+    "\\apps\\sonarr\\ci",
+    "\\apps\\sonarr\\develop"
   ],
-  "SelectedNode": "\\C:\\Users\\kylel\\Source\\Repos\\raefon\\containers",
+  "SelectedNode": "\\apps\\sonarr\\develop\\Dockerfile",
   "PreviewInSolutionExplorer": false
 }
