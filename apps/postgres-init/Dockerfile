@@ -1,4 +1,4 @@
-FROM ghcr.io/raefon/alpine:rolling@sha256:259db34a717a53dfb98acf31f850c0a5a82b60734f58a2a78cb69c2149921053
+FROM ghcr.io/raefon/alpine:rolling@sha256:9f414960d5cee8f2b9c17f8e510aa88c8d95345365d1dbf4af670b7079dbe20d
 
 ARG TARGETPLATFORM
 ARG VERSION
