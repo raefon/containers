@@ -77,7 +77,7 @@ RUN \
 
 #hadolint ignore=DL3018,DL3013,DL3059,DL4006
 RUN \
-    curl -fsSL 'https://github.com/home-assistant/core/archive/refs/tags/${VERSION}.tar.gz' \
+    curl -fsSL "https://github.com/home-assistant/core/archive/${VERSION}.tar.gz" \
         | tar xzf - -C /tmp --strip-components=1 \
     && \
     mkdir -p /pip-packages \
@@ -102,10 +102,10 @@ RUN \
         ;; \
     esac \
     && \
-    HOME_ASSISTANT_BASE=$(curl -fsSL 'https://raw.githubusercontent.com/home-assistant/core/${VERSION}/build.yaml' | grep "${ARCH}: " | cut -d ":" -f3) \
+    HOME_ASSISTANT_BASE=$(curl -fsSL "https://raw.githubusercontent.com/home-assistant/core/${VERSION}/build.yaml" | grep "${ARCH}: " | cut -d ":" -f3) \
     && \
     pip install --break-system-packages --no-index --only-binary=:all: --find-links "${ALPINE_WHEELS}" --find-links "${HOMEASSISTANT_WHEELS}" \
-        --requirement 'https://raw.githubusercontent.com/home-assistant/docker/${HOME_ASSISTANT_BASE}/requirements.txt' \
+        --requirement "https://raw.githubusercontent.com/home-assistant/docker/${HOME_ASSISTANT_BASE}/requirements.txt" \
     && \
     pip install --break-system-packages --find-links "${ALPINE_WHEELS}" --find-links "${HOMEASSISTANT_WHEELS}" \
         --requirement requirements_all.txt \
