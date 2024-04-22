@@ -3,29 +3,48 @@
   "extends": [
     "config:recommended",
     "docker:enableMajor",
-    "helpers:pinGitHubActionDigests",
-    ":automergeBranch",
     ":dependencyDashboard",
-    ":semanticCommits",
-    ":skipStatusChecks"
+    ":disableRateLimiting",
+    ":timezone(America/New_York)",
+    ":semanticCommits"
   ],
-  "onboarding": false,
-  "requireConfig": "optional",
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "suppressNotifications": ["prIgnoreNotification"],
+  "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
   "packageRules": [
     {
-      "description": "Auto-merge Github Actions",
-      "matchDatasources": ["github-tags"],
-      "automerge": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchPackagePatterns": ["renovatebot/github-action"]
+      "addLabels": ["renovate/container", "type/major"],
+      "additionalBranchPrefix": "{{parentDir}}-",
+      "commitMessageExtra": " ( {{currentVersion}} → {{newVersion}} )",
+      "commitMessagePrefix": "feat({{parentDir}})!: ",
+      "commitMessageTopic": "{{depName}}",
+      "labels": ["app/{{parentDir}}"],
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["apps/**/Dockerfile"],
+      "matchUpdateTypes": ["major"]
     },
     {
+      "addLabels": ["renovate/container", "type/minor"],
+      "additionalBranchPrefix": "{{parentDir}}-",
+      "commitMessageExtra": "( {{currentVersion}} → {{newVersion}} )",
+      "commitMessageTopic": "{{depName}}",
+      "labels": ["app/{{parentDir}}"],
       "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["digest"],
-      "commitMessagePrefix": "📣 "
+      "matchFileNames": ["apps/**/Dockerfile"],
+      "matchUpdateTypes": ["minor"],
+      "semanticCommitScope": "{{parentDir}}",
+      "semanticCommitType": "feat"
+    },
+    {
+      "addLabels": ["renovate/container", "type/patch"],
+      "additionalBranchPrefix": "{{parentDir}}-",
+      "commitMessageExtra": "( {{currentVersion}} → {{newVersion}} )",
+      "commitMessageTopic": "{{depName}}",
+      "labels": ["app/{{parentDir}}"],
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["apps/**/Dockerfile"],
+      "matchUpdateTypes": ["patch"],
+      "semanticCommitScope": "{{parentDir}}",
+      "semanticCommitType": "fix"
     }
   ]
 }
