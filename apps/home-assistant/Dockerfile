@@ -1,4 +1,4 @@
-FROM ghcr.io/raefon/alpine:3.18.6@sha256:f37653d80362737ae4ff876eaa14a79c08af7ccf5f7f1a7fba0528ff07e5e134
+FROM ghcr.io/raefon/alpine:rolling@sha256:9997353bd2847c7e0b27c44441622e537d531d1987c692bd1c8524590482c5da
 
 # https://github.com/linuxserver/docker-homeassistant
 # https://github.com/home-assistant/docker
@@ -15,7 +15,7 @@ ENV \
     PIP_ROOT_USER_ACTION=ignore \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    ALPINE_WHEELS="https://wheel-index.linuxserver.io/alpine-3.18/" \
+    ALPINE_WHEELS="https://wheel-index.linuxserver.io/alpine-3.19/" \
     HOMEASSISTANT_WHEELS="https://wheel-index.linuxserver.io/homeassistant-3.18/" \
     PYTHONPATH="${PYTHONPATH}:/pip-packages" \
     HOME="/config"
