@@ -15,8 +15,8 @@ ENV \
     PIP_ROOT_USER_ACTION=ignore \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    ALPINE_WHEELS="https://wheel-index.linuxserver.io/alpine-3.18/" \
-    HOMEASSISTANT_WHEELS="https://wheel-index.linuxserver.io/homeassistant-3.18/" \
+    ALPINE_WHEELS="https://wheel-index.linuxserver.io/alpine-3.19/" \
+    HOMEASSISTANT_WHEELS="https://wheel-index.linuxserver.io/homeassistant-3.19/" \
     PYTHONPATH="${PYTHONPATH}:/pip-packages" \
     HOME="/config"
 
