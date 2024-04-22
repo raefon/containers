@@ -18,7 +18,7 @@ on:
         type: boolean
       sendNotifications:
         required: false
-        default: false
+        default: true
         type: boolean
       force:
         required: false
@@ -31,6 +31,9 @@ on:
         required: true
       BOT_APP_PRIVATE_KEY:
         description: The private key of the GitHub App
+        required: true
+      DISCORD_WEBHOOK:
+        description: Discord webhook
         required: true
 
 jobs:
@@ -327,7 +330,7 @@ jobs:
         uses: sarisia/actions-status-discord@6712a17f7d0531d44cd42ca2a878b0bdfd07b62a # v1.14.1
         if: ${{ always() && inputs.sendNotifications == 'true' }}
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook: "${{ secrets.DISCORD_WEBHOOK }}"
           title: ${{ steps.build-failed.outputs.message || steps.build-success.outputs.message }}
           color: ${{ steps.build-failed.outputs.color || steps.build-success.outputs.color }}
           username: GitHub Actions
