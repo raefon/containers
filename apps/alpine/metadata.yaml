@@ -8,3 +8,9 @@ channels:
     tests:
       enabled: true
       type: cli
+  - name: "3.18"
+    platforms: ["linux/amd64", "linux/arm64"]
+    stable: true
+    tests:
+      enabled: true
+      type: cli
