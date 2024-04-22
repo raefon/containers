@@ -4,7 +4,7 @@ ARG CHANNEL
 
 FROM filebrowser/filebrowser:${VERSION} as upstream
 
-FROM ghcr.io/raefon/alpine:rolling@sha256:720b7af86354bbad3ea51faffaa480aa39b47150a17479b2bf515c8f12551106
+FROM ghcr.io/raefon/alpine:rolling@sha256:2df814ae59dc9cffc742e8d186fddbc497ca28237af69b9700f78414d1c2837d
 
 EXPOSE 80
 
