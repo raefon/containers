@@ -32,7 +32,7 @@
       "matchFileNames": ["apps/**/Dockerfile"],
       "matchUpdateTypes": ["minor"],
       "semanticCommitScope": "{{parentDir}}",
-      "semanticCommitType": "feat"
+      "semanticCommitType": "feat",
       "automerge": true
     },
     {
