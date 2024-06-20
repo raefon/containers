@@ -33,6 +33,7 @@
       "matchUpdateTypes": ["minor"],
       "semanticCommitScope": "{{parentDir}}",
       "semanticCommitType": "feat"
+      "automerge": true
     },
     {
       "addLabels": ["renovate/container", "type/patch"],
