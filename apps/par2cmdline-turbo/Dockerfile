@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/alpine:3.19.1 as build
+FROM public.ecr.aws/docker/library/alpine:3.20.1 as build
 ARG TARGETARCH
 ARG VERSION
 WORKDIR /tmp
@@ -19,7 +19,7 @@ RUN \
     && make \
     && make install
 
-FROM public.ecr.aws/docker/library/alpine:3.19.1
+FROM public.ecr.aws/docker/library/alpine:3.20.1
 COPY --from=build /usr/local/bin/par2 /usr/local/bin/par2
 RUN /usr/local/bin/par2 --help
 CMD ["/usr/local/bin/par2"]
