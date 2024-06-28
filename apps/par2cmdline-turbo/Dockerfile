@@ -19,7 +19,7 @@ RUN \
     && make \
     && make install
 
-FROM public.ecr.aws/docker/library/alpine:3.20.1
+FROM public.ecr.aws/docker/library/alpine:3.14.5
 COPY --from=build /usr/local/bin/par2 /usr/local/bin/par2
 RUN /usr/local/bin/par2 --help
 CMD ["/usr/local/bin/par2"]
