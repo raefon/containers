@@ -4,7 +4,7 @@ ARG CHANNEL
 
 FROM syncthing/syncthing:${VERSION} as upstream
 
-FROM ghcr.io/raefon/alpine:rolling@sha256:2df814ae59dc9cffc742e8d186fddbc497ca28237af69b9700f78414d1c2837d
+FROM ghcr.io/raefon/alpine:rolling@sha256:ab32afe23fd22b68ea4ef0db0899a57548bf15a8afa9963d9c6b575a689e9153
 
 COPY --from=upstream /bin/syncthing /bin/syncthing
 
