@@ -1,4 +1,4 @@
-FROM ghcr.io/raefon/ubuntu:jammy-20240808@sha256:03308b9ad10c4da859df48ece997abdb2a2517a4f687ef6a0d0fbab238f531f4
+FROM ghcr.io/raefon/ubuntu:jammy-20240911.1@sha256:dc4223b98c447a43344aebfdada1c38b066ea0196cfb76e99a132a4f48cec39c
 
 ARG TARGETPLATFORM
 ARG VERSION
