@@ -44,7 +44,7 @@ RUN \
         --disabled-password \
         --no-create-home \
     && \
-    groupadd --gid 109 render \
+    groupadd --gid 992 render \
     && \
     usermod -a -G video,render kah \
     && \
