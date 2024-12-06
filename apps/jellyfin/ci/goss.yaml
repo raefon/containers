@@ -1,5 +1,6 @@
 ---
 
 file:
-  /config/jellyfin/system.xml:
+  /config/jellyfin:
+    filetype: directory
     exists: true
