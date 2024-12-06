@@ -41,5 +41,5 @@ RUN \
     && printf "umask %d\n" "${UMASK}" >> /etc/bash.bashrc
 
 USER kah
-COPY ./apps/plex/entrypoint.sh /entrypoint.sh
+COPY ./apps/jellyfin/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
