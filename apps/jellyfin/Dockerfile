@@ -28,18 +28,11 @@ RUN \
     && \
     add-apt-repository universe \
     && \
-    apt-get -qq update \
+    curl -s https://repo.jellyfin.org/ubuntu/jellyfin_team.gpg.key | gpg --dearmor | tee /usr/share/keyrings/jellyfin.gpg >/dev/null \
     && \
-    curl -fsSL -o /tmp/jellyfin.deb \
-        "https://repo.jellyfin.org/files/server/ubuntu/latest-stable/amd64/jellyfin-server_10.10.3+ubu2404_amd64.deb" \
+    echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/jellyfin.gpg] https://repo.jellyfin.org/ubuntu noble main' > /etc/apt/sources.list.d/jellyfin.list \
     && \
-    curl -fsSL -o /tmp/jellyfin-web.deb \
-        "https://repo.jellyfin.org/files/server/ubuntu/latest-stable/amd64/jellyfin-web_10.10.3+ubu2404_all.deb" \
-    && \
-    curl -fsSL -o /tmp/jellyfin-ffmpeg.deb \
-        "https://repo.jellyfin.org/files/ffmpeg/ubuntu/latest-7.x/amd64/jellyfin-ffmpeg7_7.0.2-7-noble_amd64.deb" \
-    && \
-    apt install -y /tmp/jellyfin.deb /tmp/jellyfin-web.deb /tmp/jellyfin-ffmpeg.deb \
+    apt-get install -y --no-install-recommends jellyfin-server=${VERSION} mesa-va-drivers \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \
     && apt-get clean \
