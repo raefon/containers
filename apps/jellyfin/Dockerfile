@@ -24,11 +24,16 @@ RUN \
         libusb-dev \
         uuid-runtime \
         xmlstarlet \
+        software-properties-common \
     && \
-    curl -fsSL -o /tmp/jellyfin.deb \
-        "https://repo.jellyfin.org/files/server/ubuntu/latest-${CHANNEL}/${ARCH}/jellyfin-server_${VERSION}+ubu2204_${ARCH}.deb" \
+    add-apt-repository universe \
     && \
-    apt install -y /tmp/jellyfin.deb \
+    curl -s https://repo.jellyfin.org/ubuntu/jellyfin_team.gpg.key | gpg --dearmor | tee /usr/share/keyrings/jellyfin.gpg >/dev/null \
+    && \
+    echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/jellyfin.gpg] https://repo.jellyfin.org/ubuntu jammy main' > /etc/apt/sources.list.d/jellyfin.list \
+    && \
+    apt-get install -y --no-install-recommends \
+        jellyfin=${VERSION} mesa-va-drivers \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \
     && apt-get clean \
