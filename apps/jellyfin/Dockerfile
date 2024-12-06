@@ -24,17 +24,11 @@ RUN \
         libusb-dev \
         uuid-runtime \
         xmlstarlet \
-        software-properties-common \
     && \
-    add-apt-repository universe \
+    curl -fsSL -o /tmp/jellyfin.deb \
+        "https://repo.jellyfin.org/files/server/ubuntu/latest-${CHANNEL}}/${ARCH}/jellyfin-server_${VERSION}+ubu2404_${ARCH}.deb" \
     && \
-    curl -s https://repo.jellyfin.org/ubuntu/jellyfin_team.gpg.key | gpg --dearmor | tee /usr/share/keyrings/jellyfin.gpg >/dev/null \
-    && \
-    echo 'deb [arch=${ARCH} signed-by=/usr/share/keyrings/jellyfin.gpg] https://repo.jellyfin.org/ubuntu jammy main' > /etc/apt/sources.list.d/jellyfin.list \
-    && \
-    apt-get -qq update \
-    && \
-    apt-get install -y --no-install-recommends jellyfin=${VERSION}-+ubu2204 mesa-va-drivers \
+    dpkg -i --force-confold /tmp/jellyfin.deb \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \
     && apt-get clean \
@@ -47,5 +41,5 @@ RUN \
     && printf "umask %d\n" "${UMASK}" >> /etc/bash.bashrc
 
 USER kah
-COPY ./apps/jellyfin/entrypoint.sh /entrypoint.sh
+COPY ./apps/plex/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
