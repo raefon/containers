@@ -32,6 +32,8 @@ RUN \
     && \
     echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/jellyfin.gpg] https://repo.jellyfin.org/ubuntu jammy main' > /etc/apt/sources.list.d/jellyfin.list \
     && \
+    apt-get -qq update \
+    && \
     apt-get install -y --no-install-recommends \
         jellyfin=${VERSION} mesa-va-drivers \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
