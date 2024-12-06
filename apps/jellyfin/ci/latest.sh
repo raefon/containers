@@ -2,7 +2,7 @@
 channel=$1
 
 if [[ "${channel}" == "stable" ]]; then
-    version=$(curl -sX GET https://repo.jellyfin.org/ubuntu/dists/jammy/main/binary-amd64/Packages |grep -A 7 -m 1 'Package: jellyfin-server' | awk -F ': ' '/Version/{print $2;exit}');
+    version="$(curl -sX GET "https://api.github.com/repos/jellyfin/jellyfin/releases/latest" | jq --raw-output '.tag_name' 2>/dev/null)"
 fi
 
 version="${version#*v}"
