@@ -25,6 +25,40 @@ RUN \
         uuid-runtime \
         xmlstarlet \
         libfontconfig1 \
+        libbluray2 \
+        libelf1t64 \
+        libgmp10 \
+        libgnutls30t64 \
+        libllvm17t64 \
+        libmp3lame0 \
+        libopenmpt0t64 \
+        libopus0 \
+        libpciaccess0 \
+        libstdc++6 \
+        libtheora0 \
+        libvorbis0a \
+        libvorbisenc2 \
+        libvpx9 \
+        libwebp7 \
+        libwebpmux3 \
+        libx11-xcb1 \
+        libx264-164 \
+        libx265-199 \
+        libxcb-dri2-0 \
+        libxcb-dri3-0 \
+        libxcb-present0 \
+        libxcb-randr0 \
+        libxcb-shm0 \
+        libxcb-sync1 \
+        libxcb-xfixes0 \
+        libxcb1 \
+        libxshmfence1 \
+        libzstd1 \
+        libzvbi0t64 \
+        ocl-icd-libopencl1 \
+        libopencl1 \
+        ocl-icd-libopencl1 \
+        libopencl-1.2-1 \
     && \
     curl -fsSL -o /tmp/jellyfin.deb \
         "https://repo.jellyfin.org/files/server/ubuntu/latest-stable/amd64/jellyfin-server_10.10.3+ubu2404_amd64.deb" \
