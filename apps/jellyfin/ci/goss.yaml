@@ -1,4 +1,5 @@
 ---
 
 file:
-  /config/jellyfin/system.xml
+  /config/jellyfin/system.xml:
+    exists: true
