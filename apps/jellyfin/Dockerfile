@@ -26,7 +26,7 @@ RUN \
         xmlstarlet \
     && \
     curl -fsSL -o /tmp/jellyfin.deb \
-        "https://repo.jellyfin.org/files/server/ubuntu/latest-${CHANNEL}}/${ARCH}/jellyfin-server_${VERSION}+ubu2404_${ARCH}.deb" \
+        "https://repo.jellyfin.org/files/server/ubuntu/latest-${CHANNEL}}/${ARCH}/jellyfin-server_${VERSION}+ubu2204_${ARCH}.deb" \
     && \
     dpkg -i --force-confold /tmp/jellyfin.deb \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
