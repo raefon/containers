@@ -32,7 +32,10 @@ RUN \
     curl -fsSL -o /tmp/jellyfin-web.deb \
         "https://repo.jellyfin.org/files/server/ubuntu/latest-stable/amd64/jellyfin-web_10.10.3+ubu2404_all.deb" \
     && \
-    dpkg -i --force-confold /tmp/jellyfin.deb /tmp/jellyfin-web.deb \
+    curl -fsSL -o /tmp/jellyfin-ffmpeg.deb \
+        "https://repo.jellyfin.org/files/ffmpeg/ubuntu/latest-7.x/amd64/jellyfin-ffmpeg7_7.0.2-7-noble_amd64.deb" \
+    && \
+    dpkg -i --force-confold /tmp/jellyfin.deb /tmp/jellyfin-web.deb /tmp/jellyfin-ffmpeg.deb \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \
     && apt-get clean \
