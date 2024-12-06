@@ -17,8 +17,6 @@ RUN \
         ;; \
     esac \
     && \
-    add-apt-repository universe \
-    && \
     apt-get -qq update \
     && \
     apt-get -qq install -y \
@@ -26,6 +24,9 @@ RUN \
         libusb-dev \
         uuid-runtime \
         xmlstarlet \
+        software-properties-common \
+    && \
+    add-apt-repository universe \
     && \
     curl -fsSL -o /tmp/jellyfin.deb \
         "https://repo.jellyfin.org/files/server/ubuntu/latest-stable/amd64/jellyfin-server_10.10.3+ubu2404_amd64.deb" \
