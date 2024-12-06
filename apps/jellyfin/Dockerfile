@@ -17,6 +17,8 @@ RUN \
         ;; \
     esac \
     && \
+    add-apt-repository universe \
+    && \
     apt-get -qq update \
     && \
     apt-get -qq install -y \
