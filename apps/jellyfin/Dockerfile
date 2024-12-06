@@ -24,9 +24,10 @@ RUN \
         libusb-dev \
         uuid-runtime \
         xmlstarlet \
+        libfontconfig1 \
     && \
     curl -fsSL -o /tmp/jellyfin.deb \
-        "https://repo.jellyfin.org/files/server/ubuntu/latest-${CHANNEL}}/${ARCH}/jellyfin-server_${VERSION}+ubu2404_${ARCH}.deb" \
+        "https://repo.jellyfin.org/files/server/ubuntu/latest-stable/amd64/jellyfin-server_10.10.3+ubu2404_amd64.deb" \
     && \
     dpkg -i --force-confold /tmp/jellyfin.deb \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
@@ -41,5 +42,5 @@ RUN \
     && printf "umask %d\n" "${UMASK}" >> /etc/bash.bashrc
 
 USER kah
-COPY ./apps/plex/entrypoint.sh /entrypoint.sh
+COPY ./apps/jellyfin/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
