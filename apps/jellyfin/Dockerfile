@@ -35,7 +35,7 @@ RUN \
     apt-get -qq update \
     && \
     apt-get install -y --no-install-recommends \
-        jellyfin=${VERSION} mesa-va-drivers \
+        jellyfin=${VERSION}+ubu2204 mesa-va-drivers \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get autoremove -y \
     && apt-get clean \
