@@ -1,4 +1,4 @@
-FROM ghcr.io/raefon/par2cmdline-turbo:1.1.1 as par2cmdline-turbo
+FROM ghcr.io/raefon/par2cmdline-turbo:1.2.0 as par2cmdline-turbo
 
 FROM ghcr.io/raefon/alpine:rolling@sha256:34fc6966b3f623df9b3f8a8755bd63ddee41c4ac42b68971e790550b2974245c
 ARG TARGETPLATFORM
