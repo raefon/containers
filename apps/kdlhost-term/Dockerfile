@@ -16,6 +16,9 @@ ADD --chmod=755 https://github.com/aptible/supercronic/releases/download/v0.2.33
 # restrict user with rbash
 RUN chsh -s /bin/rbash kah
 
+# add PlexTraktSync
+RUN pipx install PlexTraktSync
+
 EXPOSE 3001
 
 RUN chmod +x /usr/local/bin/*.sh

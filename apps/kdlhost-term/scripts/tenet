@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if [[ $# -lt 2 ]]; then 
+    echo "usage: tenet <command> <app> <optional>"
+    echo
+    echo '<app> must match an app found in /config'
+    echo
+    echo "valid commands are:"
+    echo
+    echo "tenet restart <app>              : restarts an app"
+    echo "tenet claim plex <token>         : claims a plex server"
+fi
+
+case $1 in
+
+    "restart")
+        echo "restarting $2..."
+        echo restart > /app-watcher/$2
+        ;;
+
+    "claim")
+        if [[ "$#" -lt 3 ]]; then  
+            echo plex claim token missing, get one from https://www.plex.tv/claim/
+            exit 1
+        fi       
+        if [[ ! "$3" =~ "claim-" ]]; then  
+            echo plex claim token invalid, get one from https://www.plex.tv/claim/
+            exit 1
+        fi   
+        if [[ "$2" = "plex" ]]; then
+            echo "attempting plex claim with token [$3]..."
+            /usr/local/bin/claim-plex-server.sh $3
+            echo "restarting plex..."
+            echo restart > /app-watcher/$2
+        else
+            echo "this command is only for claiming plex"
+        fi
+        ;;
+
+esac
