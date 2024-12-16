@@ -5,7 +5,8 @@ ARG VERSION
 COPY ./apps/kdlhost-term/scripts/* /usr/local/bin/
 COPY ./apps/kdlhost-term/restricted.tmux.conf ./apps/kdlhost-term/crontab /app/kdlhost-term/
 RUN apk add --no-cache shadow bash fish curl openssl ca-certificates pipx py3-virtualenv nano tmux \
-	&& pipx ensurepath
+	&& pipx ensurepath \
+	&& rm -rf /var/cache/apk/*
 
 # add ttyd
 ADD --chmod=755 https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 /usr/local/bin/ttyd
@@ -14,10 +15,8 @@ ADD --chmod=755 https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86
 ADD --chmod=755 https://github.com/aptible/supercronic/releases/download/v0.2.33/supercronic-linux-amd64 /usr/local/bin/supercronic
 
 # restrict user with rbash
-RUN chsh -s /bin/rbash kah
-
-# add PlexTraktSync
-RUN pipx install PlexTraktSync
+RUN ln -s /bin/bash /bin/rbash \
+	&& chsh -s /bin/rbash kah
 
 EXPOSE 3001
 

@@ -1,14 +1,5 @@
 #!/bin/bash
 
-# Start lshell in the background
-# readonly PATH=$HOME/programs
-
-export HOME=/config/kdlhost-term
-export PATH=$PATH:$HOME/.local/bin/
-
-cd /data
-#tmux -f /app/kdlhost-term/restricted.tmux.conf new-session -x 80 -y 24 -A -d -s kdlhost-term fish
-
 # Prepare a tmux entry to the already-running process, use solarized dark colors
 ttyd -p 3001 -W \
  -t titleFixed='TERMINAL | KDLHOST' \
