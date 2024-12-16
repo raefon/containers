@@ -24,6 +24,7 @@ RUN \
 
 FROM ghcr.io/raefon/alpine:rolling@sha256:34fc6966b3f623df9b3f8a8755bd63ddee41c4ac42b68971e790550b2974245c
 COPY --from=build /tmp /app/overseerr
+COPY ./apps/overseerr/entrypoint.sh /
 RUN apk add --no-cache yarn
 USER kah
 CMD ["/entrypoint.sh"]
