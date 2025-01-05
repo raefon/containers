@@ -1,0 +1,2 @@
+#*/5 * * * * * * echo "hello from Supercronic"
+#0 5 * * * * * plextraktsync

@@ -1,0 +1,12 @@
+name: kdlhost-terminal
+root: ~/
+
+#tmux_options: -f /app/kdlhost-term/restricted.tmux.conf
+
+windows:
+  - kdlhost-terminal:
+      layout: main-horizontal
+      panes:
+        - terminal:
+          - fish
+        - supercronic -inotify /config/kdlhost-term/crontab

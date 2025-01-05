@@ -3,15 +3,19 @@ ARG TARGETARCH
 ARG VERSION
 
 COPY ./apps/kdlhost-term/scripts/* /usr/local/bin/
-COPY ./apps/kdlhost-term/restricted.tmux.conf ./apps/kdlhost-term/crontab /app/kdlhost-term/
-RUN apk add --no-cache shadow bash fish curl openssl ca-certificates pipx py3-virtualenv nano tmux \
+#COPY ./scripts/* /usr/local/bin/
+COPY ./apps/kdlhost-term/app/* /app/kdlhost-term/
+#COPY ./app/* /app/kdlhost-term/
+RUN apk add --no-cache shadow bash fish curl openssl ca-certificates pipx py3-virtualenv nano tmux ruby ruby-dev build-base git \
 	&& pipx ensurepath \
+	&& gem install tmuxinator \
+	&& apk del ruby-dev build-base \
 	&& rm -rf /var/cache/apk/*
 
 # add ttyd
 ADD --chmod=755 https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 /usr/local/bin/ttyd
 
-# add superconic
+# add supercronic
 ADD --chmod=755 https://github.com/aptible/supercronic/releases/download/v0.2.33/supercronic-linux-amd64 /usr/local/bin/supercronic
 
 # add kubectl
