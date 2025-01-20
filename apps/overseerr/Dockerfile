@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/alpine:3.21.0 AS build
+FROM public.ecr.aws/docker/library/alpine:3.21.2 AS build
 ARG TARGETARCH
 ARG VERSION
 WORKDIR /tmp
