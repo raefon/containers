@@ -24,7 +24,7 @@ RUN PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin PIPX_MAN_DIR=/usr/local/shar
 
 # add Kometa(PlexMetaManager)
 RUN git clone https://github.com/Kometa-Team/Kometa /app/kometa \
-	&& pip install -r /app/kometa/requirements.txt
+	&& pip install -r /app/kometa/requirements.txt --break-system-packages --ignore-installed
 
 # restrict user with rbash
 RUN ln -s /bin/bash /bin/rbash \
