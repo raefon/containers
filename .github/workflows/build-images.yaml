@@ -232,7 +232,7 @@ jobs:
 
       - name: Upload Digest
         if: ${{ inputs.pushImages}}
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.image.name }}
           path: /tmp/${{ matrix.image.name }}/*
@@ -256,7 +256,7 @@ jobs:
         run: echo "LOWERCASE_REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> "${GITHUB_ENV}"
 
       - name: Download Digests
-        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ matrix.image.name }}
           path: /tmp/${{ matrix.image.name }}
