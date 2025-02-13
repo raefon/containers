@@ -6,11 +6,9 @@ COPY ./apps/kdlhost-term/scripts/* /usr/local/bin/
 #COPY ./scripts/* /usr/local/bin/
 COPY ./apps/kdlhost-term/app/* /app/kdlhost-term/
 #COPY ./app/* /app/kdlhost-term/
-RUN apk add --no-cache shadow bash fish curl openssl ca-certificates pipx py3-virtualenv nano tmux ruby ruby-dev build-base git \
+RUN apk add --no-cache shadow bash fish curl openssl ca-certificates py3-pip pipx py3-virtualenv nano tmux ruby ruby-dev build-base musl-dev python3-dev linux-headers git \
 	&& pipx ensurepath \
-	&& gem install tmuxinator \
-	&& apk del ruby-dev build-base \
-	&& rm -rf /var/cache/apk/*
+	&& gem install tmuxinator
 
 # add ttyd
 ADD --chmod=755 https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 /usr/local/bin/ttyd
@@ -24,9 +22,17 @@ ADD --chmod=755 https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl /usr/l
 # add PlexTraktSync
 RUN PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin PIPX_MAN_DIR=/usr/local/share/man pipx install PlexTraktSync
 
+# add Kometa(PlexMetaManager)
+RUN git clone https://github.com/Kometa-Team/Kometa /app/kometa \
+	&& pip install -r /app/kometa/requirements.txt
+
 # restrict user with rbash
 RUN ln -s /bin/bash /bin/rbash \
 	&& chsh -s /bin/rbash kah
+
+# cleanup
+RUN apk del ruby-dev build-base musl-dev python3-dev linux-headers \
+	&& rm -rf /var/cache/apk/*
 
 EXPOSE 3001
 
