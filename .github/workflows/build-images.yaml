@@ -234,7 +234,7 @@ jobs:
         if: ${{ inputs.pushImages}}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.image.name }}-${{ github.run_id }}-${{ github.job }}
+          name: ${{ matrix.image.name }}
           path: /tmp/${{ matrix.image.name }}/*
           if-no-files-found: error
           retention-days: 1
@@ -258,7 +258,7 @@ jobs:
       - name: Download Digests
         uses: actions/download-artifact@v4
         with:
-          name: ${{ matrix.image.name }}-${{ github.run_id }}-build-platform-images
+          name: ${{ matrix.image.name }}
           path: /tmp/${{ matrix.image.name }}
 
       - name: Ensure all platforms were built
