@@ -234,7 +234,7 @@ jobs:
         if: ${{ inputs.pushImages}}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.image.name }}
+          name: ${{ matrix.image.name }}-${{ strategy.job-index }}
           path: /tmp/${{ matrix.image.name }}/*
           if-no-files-found: error
           retention-days: 1
@@ -259,7 +259,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ matrix.image.name }}
+          pattern: ${{ matrix.image.name }}-*
           path: /tmp/${{ matrix.image.name }}
+          merge-multiple: true
 
       - name: Ensure all platforms were built
         id: ensure-platforms
