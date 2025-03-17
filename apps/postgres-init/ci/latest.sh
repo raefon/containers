@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-version=$(curl -sX GET "https://pkgs.alpinelinux.org/packages?name=postgresql15-client&branch=v3.18&arch" | sed -n 's/.*<strong class="hint--right hint--rounded text-success" aria-label="Package up-to-date">\([^<]*\)<.*/\1/p' | sed 's/\\//g' | head -n 1)
+user_agent="User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.66 Safari/535.11"
+version=$(curl -sX GET "https://repology.org/api/v1/projects/?search=postgresql&inrepo=alpine_3_19" -H $user_agent | jq -r '.postgresql | .[] | select((.repo == "alpine_3_19" and .binname == "postgresql15")) | .origversion')
 version="${version%%_*}"
 version="${version%%-*}"
 printf "%s" "${version}"
