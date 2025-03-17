@@ -22,7 +22,7 @@ RUN \
     && \
     yarn cache clean
 
-FROM ghcr.io/raefon/alpine:rolling@sha256:fe1d7e2256371b8e923ab3063d1491d73500cf8575928cbd00d258babfad9817
+FROM ghcr.io/raefon/alpine:rolling@sha256:bbcf9df060c1f939d6867a0f45e6cc4098bbb9c758eb1477cd396a2b71a3aae6
 COPY --from=build /tmp /app/overseerr
 COPY ./apps/overseerr/entrypoint.sh /
 RUN apk add --no-cache yarn
