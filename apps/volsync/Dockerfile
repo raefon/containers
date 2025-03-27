@@ -19,7 +19,7 @@ RUN \
     && upx /go/bin/volsync
 
 FROM docker.io/rclone/rclone:1.69.0 as rclone
-FROM docker.io/restic/restic:0.17.0 as restic
+FROM docker.io/restic/restic:0.18.0 as restic
 
 FROM public.ecr.aws/docker/library/alpine:3.21
 ARG TARGETPLATFORM
