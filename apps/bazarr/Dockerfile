@@ -1,5 +1,5 @@
 # Force using 3.10
-FROM ghcr.io/raefon/alpine:rolling@sha256:fe1d7e2256371b8e923ab3063d1491d73500cf8575928cbd00d258babfad9817
+FROM ghcr.io/raefon/alpine:rolling@sha256:2d470fad7bb189fd9e2744208204784aee7ab8912509afa1829aad9e13bca57c
 
 ARG TARGETPLATFORM
 ARG VERSION
