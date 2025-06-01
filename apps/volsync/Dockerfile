@@ -1,5 +1,5 @@
 ARG VERSION
-FROM public.ecr.aws/docker/library/alpine:3.21 as builder
+FROM public.ecr.aws/docker/library/alpine:3.22 as builder
 ARG VERSION
 ARG TARGETOS
 ARG TARGETARCH
@@ -21,7 +21,7 @@ RUN \
 FROM docker.io/rclone/rclone:1.69.0 as rclone
 FROM docker.io/restic/restic:0.18.0 as restic
 
-FROM public.ecr.aws/docker/library/alpine:3.21
+FROM public.ecr.aws/docker/library/alpine:3.22
 ARG TARGETPLATFORM
 ARG VERSION
 ARG CHANNEL
