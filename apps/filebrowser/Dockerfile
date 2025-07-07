@@ -11,7 +11,7 @@ EXPOSE 80
 # Use this so that dgoss works
 ENV FB_DATABASE=/tmp/filebrowser.db
 
-COPY --from=upstream /filebrowser /filebrowser
+COPY --from=upstream /bin/filebrowser /filebrowser
 COPY ./apps/filebrowser/branding /branding/
 COPY ./apps/filebrowser/scripts/* /usr/local/bin/
 COPY ./apps/filebrowser/settings.json /app/filebrowser/settings.json
