@@ -1,5 +1,5 @@
 ARG TARGETPLATFORM
-ARG VERSION
+ARG VERSION=latest
 ARG CHANNEL
 
 FROM filebrowser/filebrowser:${VERSION} AS upstream
