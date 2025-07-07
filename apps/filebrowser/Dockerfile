@@ -2,7 +2,7 @@ ARG TARGETPLATFORM
 ARG VERSION
 ARG CHANNEL
 
-FROM filebrowser/filebrowser:${VERSION} as upstream
+FROM filebrowser/filebrowser:${VERSION} AS upstream
 
 FROM ghcr.io/raefon/alpine:rolling@sha256:fe1d7e2256371b8e923ab3063d1491d73500cf8575928cbd00d258babfad9817
 
