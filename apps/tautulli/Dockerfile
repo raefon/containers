@@ -15,7 +15,7 @@ ENV \
 ENV TAUTULLI_DOCKER="True"
 
 RUN \
-    curl -fsSL "https://github.com/Tautulli/Tautulli/archive/v${VERSION}.tar.gz" | tar xzf - -C /app --strip-components 1 \
+    curl -fsSL "https://github.com/Tautulli/Tautulli/archive/${VERSION}.tar.gz" | tar xzf - -C /app --strip-components 1 \
     && \
     echo "v${VERSION}" > /app/version.txt \
     && \
