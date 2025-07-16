@@ -10,7 +10,7 @@ WORKDIR /src
 RUN apk add --no-cache git upx
 
 # Download source code for the specified version
-RUN git clone --branch v${VERSION} --depth 1 https://github.com/backube/volsync.git .
+RUN git clone --branch ${VERSION} --depth 1 https://github.com/backube/volsync.git .
 
 # Build the binary
 RUN CGO_ENABLED=0 \
