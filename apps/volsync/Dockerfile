@@ -15,7 +15,7 @@ ENV PATH $GOPATH/bin:$PATH
 #hadolint ignore=DL3018
 RUN \
     apk add --no-cache git go upx \
-    && go install -a -ldflags "-X=main.volsyncVersion=v${VERSION}" github.com/backube/volsync@v${VERSION} \
+    && go install -a -ldflags "-X=main.volsyncVersion=v${VERSION}" github.com/backube/volsync/cmd/volsync@v${VERSION} \
     && upx /go/bin/volsync
 
 FROM docker.io/rclone/rclone:1.70.2 as rclone
