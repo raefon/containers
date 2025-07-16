@@ -1,25 +1,25 @@
 ARG VERSION
-FROM public.ecr.aws/docker/library/alpine:3.22 as builder
+FROM golang:1.21-alpine as builder
 ARG VERSION
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT=""
-ARG TARGETPLATFORM
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=${TARGETOS} \
-    GOARCH=${TARGETARCH} \
-    GOARM=${TARGETVARIANT} \
-    GOPATH=/go \
-    GOPROXY=direct
-ENV PATH $GOPATH/bin:$PATH
-#hadolint ignore=DL3018
-RUN \
-    apk add --no-cache git go upx \
-    && go version \
-    && go install -x -a -ldflags "-X=main.volsyncVersion=${VERSION}" github.com/backube/volsync/cmd/volsync@${VERSION} \
-    && ls -l /go/bin/volsync \
-    && upx /go/bin/volsync
+WORKDIR /src
+
+# Install build dependencies
+RUN apk add --no-cache git upx
+
+# Download source code for the specified version
+RUN git clone --branch v${VERSION} --depth 1 https://github.com/backube/volsync.git .
+
+# Build the binary
+RUN CGO_ENABLED=0 \
+    GOOS=${TARGETOS:-linux} \
+    GOARCH=${TARGETARCH:-amd64} \
+    go build -ldflags "-X=main.volsyncVersion=${VERSION}" -o /go/bin/volsync ./cmd/volsync
+
+# Optionally compress the binary
+RUN upx /go/bin/volsync
 
 FROM docker.io/rclone/rclone:1.70.2 as rclone
 FROM docker.io/restic/restic:0.18.0 as restic
