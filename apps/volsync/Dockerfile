@@ -1,5 +1,5 @@
 FROM ghcr.io/backube/volsync:v0.13.0 as volsync
-FROM docker.io/rclone/rclone:1.70.2 as rclone
+FROM docker.io/rclone/rclone:1.70.3 as rclone
 FROM docker.io/restic/restic:0.18.0 as restic
 
 FROM public.ecr.aws/docker/library/alpine:3.22
