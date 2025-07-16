@@ -17,7 +17,7 @@ ENV PATH $GOPATH/bin:$PATH
 RUN \
     apk add --no-cache git go upx \
     && go version \
-    && go install -x -a -ldflags "-X=main.volsyncVersion=${VERSION}" github.com/backube/volsync@${VERSION} \
+    && go install -x -a -ldflags "-X=main.volsyncVersion=${VERSION}" github.com/backube/volsync/cmd/volsync@${VERSION} \
     && ls -l /go/bin/volsync \
     && upx /go/bin/volsync
 
