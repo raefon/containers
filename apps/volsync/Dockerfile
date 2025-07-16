@@ -17,7 +17,7 @@ ENV PATH $GOPATH/bin:$PATH
 RUN \
     apk add --no-cache git go upx \
     && go version \
-    && go install -x -a -ldflags "-X=main.volsyncVersion=v${VERSION}" github.com/backube/volsync@v${VERSION} \
+    && go install -x -a -ldflags "-X=main.volsyncVersion=${VERSION}" github.com/backube/volsync@${VERSION} \
     && ls -l /go/bin/volsync \
     && upx /go/bin/volsync
 
@@ -37,7 +37,7 @@ RUN \
         curl \
         tzdata \
     && \
-    curl -fsSL "https://github.com/backube/volsync/archive/refs/tags/v${VERSION}.tar.gz" \
+    curl -fsSL "https://github.com/backube/volsync/archive/refs/tags/${VERSION}.tar.gz" \
         | tar xzf - -C /tmp --strip-components=1 \
     && mkdir -p /mover-rclone \
         && cp /tmp/mover-rclone/active.sh /mover-rclone/ \
