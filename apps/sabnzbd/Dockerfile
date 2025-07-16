@@ -1,6 +1,6 @@
 FROM ghcr.io/raefon/par2cmdline-turbo:1.3.0 as par2cmdline-turbo
 
-FROM ghcr.io/raefon/alpine:rolling@sha256:2d470fad7bb189fd9e2744208204784aee7ab8912509afa1829aad9e13bca57c
+FROM ghcr.io/raefon/alpine:rolling@sha256:4f977ef0d4bc467ea6faf234030ebb0e0546a7344a2f9533837609bbb1939138
 ARG TARGETPLATFORM
 ARG VERSION
 ARG CHANNEL
