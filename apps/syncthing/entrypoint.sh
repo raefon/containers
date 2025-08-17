@@ -7,5 +7,5 @@ test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
 exec \
     /bin/syncthing \
     --home /config/syncthing \
-    --no-default-folder \
+    #--no-default-folder \
     "$@"
