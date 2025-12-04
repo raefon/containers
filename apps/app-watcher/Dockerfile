@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/alpine:3.22.2 as build
+FROM public.ecr.aws/docker/library/alpine:3.23.0 as build
 ARG TARGETARCH
 ARG VERSION
 WORKDIR /tmp
@@ -28,7 +28,7 @@ RUN \
     && make -j \
     && make install
 
-FROM public.ecr.aws/docker/library/alpine:3.22.2
+FROM public.ecr.aws/docker/library/alpine:3.23.0
 COPY --from=build /usr/local/bin/fswatch /usr/local/bin/fswatch
 
 COPY ./apps/app-watcher/app-watcher.sh /usr/local/bin/app-watcher.sh
