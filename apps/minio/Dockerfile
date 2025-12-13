@@ -6,22 +6,23 @@ ARG CHANNEL
 
 WORKDIR /tmp/minio
 
-# hadolint ignore=DL3018,DL3013
+# Install build tools
 RUN apk add --no-cache \
         ca-certificates \
         git \
         bash \
-    && \
-    apk add --no-cache --virtual=.build-deps \
+    && apk add --no-cache --virtual=.build-deps \
         build-base \
         go \
         musl-dev \
-        gcc \
-    && \
-    git clone https://github.com/minio/minio.git . \
+        gcc
+
+# Clone MinIO and checkout the requested version
+RUN git clone https://github.com/minio/minio.git . \
     && if [ -n "${VERSION}" ]; then \
-        NUMBER_COMMITS_TO_REVERT=$(( $(git rev-list --count --first-parent HEAD) - $(echo "${VERSION}" | cut -d "." -f3) )); \
-        git checkout "master~${NUMBER_COMMITS_TO_REVERT}"; \
+        git fetch --tags; \
+        git rev-parse -q --verify "refs/tags/RELEASE.${VERSION}" || (echo "Version ${VERSION} not found" && exit 1); \
+        git checkout "RELEASE.${VERSION}"; \
     fi \
     && export GOPATH="/go" \
     && mkdir -p /tmp/out \
@@ -37,25 +38,30 @@ ARG TARGETPLATFORM
 ARG VERSION
 ARG CHANNEL
 
+# Copy the built binary
 COPY --from=build /tmp/out/minio /app/minio
 RUN chmod 755 /app/minio
 
-ENV \
-    PYTHONDONTWRITEBYTECODE=1 \
+# Environment
+ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_ROOT_USER_ACTION=ignore \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    CRYPTOGRAPHY_DONT_BUILD_RUST=1
-
-ENV MINIO_ROOT_USER="minioadmin" \
+    CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
+    MINIO_ROOT_USER="minioadmin" \
     MINIO_ROOT_PASSWORD="minioadmin" \
     MINIO_OPTS="server /data" \
     JBOPS__SCRIPT_PATH="bin/minio" \
     APPNAME="minio"
 
+# Use non-root user
 USER kah
+
+# Entrypoint
 COPY ./apps/minio/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 CMD ["/entrypoint.sh"]
 
+# Metadata
 LABEL org.opencontainers.image.source="https://github.com/minio/minio"
