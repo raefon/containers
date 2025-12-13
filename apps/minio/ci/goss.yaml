@@ -1,0 +1,11 @@
+file:
+  /app/minio:
+    exists: true
+    mode: "0755"
+
+command:
+  minio-version:
+    exec: "/app/minio --version"
+    exit-status: 0
+    stdout:
+      - "!^$"
