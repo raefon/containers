@@ -69,6 +69,9 @@ jobs:
         shell: bash
         run: pip install -r ./.github/scripts/requirements.txt && pip freeze
 
+      - name: Make CI scripts executable
+        run: chmod +x ./apps/*/ci/*.sh
+
       - name: Prepare Matrices
         id: prepare-matrices
         env:
