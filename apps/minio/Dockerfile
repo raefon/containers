@@ -34,10 +34,8 @@ ARG VERSION
 ARG CHANNEL
 
 COPY --from=build /tmp/minio/minio /app/minio
-RUN chmod 755 /app/minio
+COPY ./apps/minio/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh /app/minio
 
 USER kah
-
-COPY ./apps/minio/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 CMD ["/entrypoint.sh"]
