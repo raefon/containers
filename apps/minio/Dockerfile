@@ -6,25 +6,38 @@ ARG CHANNEL
 
 WORKDIR /tmp/minio
 
-# Install build tools
+# Install build tools and dependencies
 RUN apk add --no-cache \
         ca-certificates \
         git \
         bash \
-    && apk add --no-cache --virtual=.build-deps \
+    && apk add --no-cache --virtual .build-deps \
         build-base \
         go \
         musl-dev \
-        gcc
+        gcc \
+    && rm -rf /var/cache/apk/*
 
-# Clone MinIO and checkout the requested version
-RUN git clone https://github.com/minio/minio.git . \
+# Determine version if not set
+RUN if [ -z "${VERSION:-}" ]; then \
+        VERSION=$(git ls-remote --tags https://github.com/minio/minio.git | \
+            awk '{print $2}' | \
+            grep -E 'refs/tags/RELEASE\.[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}-[0-9]{2}-[0-9]{2}Z$' | \
+            sed 's|refs/tags/||' | \
+            sort -r | \
+            head -n1) && \
+        echo "Building latest MinIO release: ${VERSION}"; \
+    fi
+
+# Clone MinIO repo and checkout requested version
+RUN git clone --quiet https://github.com/minio/minio.git . \
+    && git fetch --tags --quiet \
     && if [ -n "${VERSION}" ]; then \
-        git fetch --tags; \
-        git rev-parse -q --verify "refs/tags/RELEASE.${VERSION}" || (echo "Version ${VERSION} not found" && exit 1); \
-        git checkout "RELEASE.${VERSION}"; \
-    fi \
-    && export GOPATH="/go" \
+        git checkout "${VERSION}"; \
+    fi
+
+# Build MinIO binary
+RUN export GOPATH="/go" \
     && mkdir -p /tmp/out \
     && CGO_ENABLED=0 go build \
         -trimpath \
@@ -38,11 +51,11 @@ ARG TARGETPLATFORM
 ARG VERSION
 ARG CHANNEL
 
-# Copy the built binary
+# Copy MinIO binary
 COPY --from=build /tmp/out/minio /app/minio
 RUN chmod 755 /app/minio
 
-# Environment
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_ROOT_USER_ACTION=ignore \

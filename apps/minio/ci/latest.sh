@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TMPDIR="$(mktemp -d)"
-trap 'rm -rf "${TMPDIR}"' EXIT
+# Fetch the latest MinIO RELEASE tag from GitHub
+latest_tag=$(git ls-remote --tags https://github.com/minio/minio.git | \
+             awk '{print $2}' | \
+             grep -E 'refs/tags/RELEASE\.[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}-[0-9]{2}-[0-9]{2}Z$' | \
+             sed 's|refs/tags/||' | \
+             sort -r | \
+             head -n1)
 
-git clone --quiet https://github.com/minio/minio.git "${TMPDIR}"
-pushd "${TMPDIR}" > /dev/null
-
-version=$(git rev-list --count --first-parent HEAD)
-
-popd > /dev/null
-printf "1.0.%d" "${version}"
+# Print it, fallback to "dev" if no release found
+echo "${latest_tag:-dev}"
