@@ -9,5 +9,4 @@ latest_tag=$(git ls-remote --tags https://github.com/minio/minio.git | \
              sort -r | \
              head -n1)
 
-# Print it, fallback to "dev" if no release found
-echo "${latest_tag:-dev}"
+printf "%s" "${latest_tag}"
