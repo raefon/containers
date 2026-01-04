@@ -19,6 +19,9 @@ ADD --chmod=755 https://github.com/aptible/supercronic/releases/download/v0.2.33
 # add kubectl
 ADD --chmod=755 https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl /usr/local/bin/kubectl
 
+# add Recyclarr
+RUN wget "https://github.com/recyclarr/recyclarr/releases/latest/download/recyclarr-linux-x64.tar.xz" -O - | sudo tar xJ --overwrite -C /usr/local/bin
+
 # add PlexTraktSync
 RUN PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin PIPX_MAN_DIR=/usr/local/share/man pipx install PlexTraktSync
 
