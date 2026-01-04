@@ -21,7 +21,7 @@ ADD --chmod=755 https://github.com/aptible/supercronic/releases/download/v0.2.33
 ADD --chmod=755 https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl /usr/local/bin/kubectl
 
 # add Recyclarr (musl binary from official image)
-COPY --from=recyclarr /usr/local/bin/recyclarr /usr/local/bin/recyclarr
+COPY --link --from=recyclarr /app /app/recyclarr
 RUN chmod +x /usr/local/bin/recyclarr
 
 # add PlexTraktSync
