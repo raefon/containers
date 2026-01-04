@@ -22,7 +22,6 @@ ADD --chmod=755 https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl /usr/l
 
 # add Recyclarr (musl binary from official image)
 COPY --link --from=recyclarr /app /app/recyclarr
-RUN chmod +x /usr/local/bin/recyclarr
 
 # add PlexTraktSync
 RUN PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin PIPX_MAN_DIR=/usr/local/share/man pipx install PlexTraktSync
