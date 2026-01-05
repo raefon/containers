@@ -1,5 +1,5 @@
 FROM ghcr.io/recyclarr/recyclarr:latest AS recyclarr
-FROM ghcr.io/raefon/alpine:rolling@sha256:1017ee8da45a7a13344f210eb4ec3cff73fd40522080fc757b0cacdb9f610d9c
+FROM ghcr.io/raefon/alpine:rolling@sha256:24fb561cfdd7371c1497661d9bc1d3f635c70977c52ac5b08aea368086d61b9b
 ARG TARGETARCH
 ARG VERSION
 
