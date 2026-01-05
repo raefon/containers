@@ -2,7 +2,7 @@
 app: alpine
 base: true
 channels:
-  - name: "3.19"
+  - name: "3.23"
     platforms: ["linux/amd64"]
     stable: true
     tests:
