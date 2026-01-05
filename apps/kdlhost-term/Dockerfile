@@ -7,7 +7,7 @@ COPY ./apps/kdlhost-term/scripts/* /usr/local/bin/
 #COPY ./scripts/* /usr/local/bin/
 COPY ./apps/kdlhost-term/app/* /app/kdlhost-term/
 #COPY ./app/* /app/kdlhost-term/
-RUN apk add --no-cache shadow bash fish curl openssl ca-certificates py3-pip pipx py3-virtualenv nano tmux ruby ruby-dev build-base musl-dev python3-dev linux-headers git \
+RUN apk add --no-cache shadow bash fish curl openssl ca-certificates py3-pip pipx py3-virtualenv nano tmux ruby ruby-dev build-base musl-dev python3-dev linux-headers git dotnet10-sdk \
 	&& pipx ensurepath \
 	&& gem install tmuxinator
 
