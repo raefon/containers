@@ -14,7 +14,7 @@ RUN \
     && \
     export NODE_OPTIONS=--max_old_space_size=2048 \
     && \
-    CYPRESS_INSTALL_BINARY=0 pnpm --frozen-lockfile \
+    CYPRESS_INSTALL_BINARY=0 pnpm install --frozen-lockfile --network-timeout 1000000 \
     && \
     pnpm build \
     && \
