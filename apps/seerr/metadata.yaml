@@ -1,5 +1,5 @@
 ---
-app: overseerr
+app: seerr
 base: false
 channels:
   - name: stable

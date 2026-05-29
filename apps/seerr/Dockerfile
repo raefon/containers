@@ -6,27 +6,27 @@ RUN \
     apk add --no-cache \
         build-base \
         curl \
-        yarn \
+        pnpm \
         python3 \
     && \
-    curl -fsSL "https://github.com/sct/overseerr/archive/v${VERSION}.tar.gz" \
+    curl -fsSL "https://github.com/seerr-team/seerr/archive/v${VERSION}.tar.gz" \
         | tar xzf - -C /tmp --strip-components 1 \
     && \
     export NODE_OPTIONS=--max_old_space_size=2048 \
     && \
-    CYPRESS_INSTALL_BINARY=0 yarn --frozen-lockfile --network-timeout 1000000 \
+    CYPRESS_INSTALL_BINARY=0 pnpm --frozen-lockfile --network-timeout 1000000 \
     && \
-    yarn build \
+    pnpm build \
     && \
-    yarn install --production --ignore-scripts --prefer-offline \
+    pnpm install --production --ignore-scripts --prefer-offline \
     && \
-    yarn cache clean
+    pnpm cache clean
 
 FROM ghcr.io/raefon/alpine:rolling@sha256:c7120c0a2314b54dd0b82f781348d7add10835e7188b5187cfb44bcb46a5a7b0
-COPY --from=build /tmp /app/overseerr
-COPY ./apps/overseerr/entrypoint.sh /
-RUN apk add --no-cache yarn
+COPY --from=build /tmp /app/seerr
+COPY ./apps/seerr/entrypoint.sh /
+RUN apk add --no-cache pnpm
 USER kah
 CMD ["/entrypoint.sh"]
 
-LABEL org.opencontainers.image.source="https://github.com/sct/overseerr"
+LABEL org.opencontainers.image.source="https://github.com/sct/seerr"
