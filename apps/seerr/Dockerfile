@@ -18,9 +18,9 @@ RUN \
     && \
     pnpm build \
     && \
-    pnpm cache clean
+    pnpm cache delete
 
-FROM ghcr.io/raefon/alpine:rolling@sha256:c7120c0a2314b54dd0b82f781348d7add10835e7188b5187cfb44bcb46a5a7b0
+FROM ghcr.io/raefon/alpine:rolling@sha256:f0a6485d2c1b259aef8714f4f0d53641cc906b391220ed73e9ebdb940d39bbad
 COPY --from=build /tmp /app/seerr
 COPY ./apps/seerr/entrypoint.sh /
 RUN apk add --no-cache pnpm
