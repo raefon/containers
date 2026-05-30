@@ -23,6 +23,14 @@ RUN \
 FROM ghcr.io/raefon/alpine:rolling@sha256:f0a6485d2c1b259aef8714f4f0d53641cc906b391220ed73e9ebdb940d39bbad
 COPY --from=build /tmp /app/seerr
 COPY ./apps/seerr/entrypoint.sh /
+
+ENV NODE_VERSION=22.19.1
+
+RUN apk add --no-cache curl xz tar \
+ && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" -o /tmp/node.tar.xz \
+ && tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 \
+ && rm /tmp/node.tar.xz
+
 RUN apk add --no-cache pnpm
 USER kah
 CMD ["/entrypoint.sh"]
