@@ -24,7 +24,8 @@ FROM ghcr.io/raefon/alpine:rolling@sha256:f0a6485d2c1b259aef8714f4f0d53641cc906b
 COPY --from=build /tmp /app/seerr
 COPY ./apps/seerr/entrypoint.sh /
 
-RUN curl -fsSL https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install | N_PREFIX=/usr/local bash -s 22 \
+RUN apk add --no-cache curl git \
+    && curl -fsSL https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install | N_PREFIX=/usr/local bash -s 22 \
     && corepack enable pnpm
 
 USER kah
