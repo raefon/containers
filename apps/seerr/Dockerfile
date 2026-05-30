@@ -14,11 +14,9 @@ RUN \
     && \
     export NODE_OPTIONS=--max_old_space_size=2048 \
     && \
-    CYPRESS_INSTALL_BINARY=0 pnpm install --frozen-lockfile --network-timeout 1000000 \
+    CYPRESS_INSTALL_BINARY=0 pnpm install \
     && \
     pnpm build \
-    && \
-    pnpm install --production --ignore-scripts --prefer-offline \
     && \
     pnpm cache clean
 
@@ -29,4 +27,4 @@ RUN apk add --no-cache pnpm
 USER kah
 CMD ["/entrypoint.sh"]
 
-LABEL org.opencontainers.image.source="https://github.com/sct/seerr"
+LABEL org.opencontainers.image.source="https://github.com/seerr-team/seerr"
