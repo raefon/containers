@@ -5,16 +5,16 @@ ARG VERSION
 
 RUN apk add --no-cache curl tar && \
     case "$(apk --print-arch)" in \
-        x86_64) ARCH=linux-64 ;; \
-        aarch64) ARCH=linux-arm-64 ;; \
+        x86_64) ARCH=Linux_x86_64 ;; \
+        aarch64) ARCH=Linux_arm64 ;; \
         *) echo "Unsupported architecture" && exit 1 ;; \
     esac && \
-    curl -L "https://github.com/sirrobot01/decypharr/releases/download/v${VERSION}/decypharr-${VERSION}-${ARCH}.tar.gz" \
+    curl -L "https://github.com/sirrobot01/decypharr/releases/download/v${VERSION}/decypharr_${ARCH}.tar.gz" \
     -o /tmp/decypharr.tar.gz && \
+    file /tmp/decypharr.tar.gz && \
     tar -xzf /tmp/decypharr.tar.gz -C /tmp && \
     mv /tmp/decypharr /decypharr && \
-    chmod +x /decypharr && \
-    rm /tmp/decypharr.tar.gz
+    chmod +x /decypharr
 
 # Stage 2: Download ffprobe
 FROM alpine:latest AS ffprobe-builder
