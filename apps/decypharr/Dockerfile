@@ -54,7 +54,6 @@ ARG CHANNEL
 RUN apt-get update && apt-get install -y --no-install-recommends \
     fuse3 \
     ca-certificates \
-    su-exec \
     curl \
     unzip \
     tzdata && \
