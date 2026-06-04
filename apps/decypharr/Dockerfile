@@ -3,15 +3,18 @@ FROM alpine:latest AS decypharr-builder
 
 ARG VERSION
 
-RUN apk add --no-cache curl && \
+RUN apk add --no-cache curl tar && \
     case "$(apk --print-arch)" in \
         x86_64) ARCH=linux-64 ;; \
         aarch64) ARCH=linux-arm-64 ;; \
         *) echo "Unsupported architecture" && exit 1 ;; \
     esac && \
-    curl -L "https://github.com/sirrobot01/decypharr/releases/download/v${VERSION}/decypharr-${VERSION}-${ARCH}" \
-    -o /decypharr && \
-    chmod +x /decypharr
+    curl -L "https://github.com/sirrobot01/decypharr/releases/download/v${VERSION}/decypharr-${VERSION}-${ARCH}.tar.gz" \
+    -o /tmp/decypharr.tar.gz && \
+    tar -xzf /tmp/decypharr.tar.gz -C /tmp && \
+    mv /tmp/decypharr /decypharr && \
+    chmod +x /decypharr && \
+    rm /tmp/decypharr.tar.gz
 
 # Stage 2: Download ffprobe
 FROM alpine:latest AS ffprobe-builder
