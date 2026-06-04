@@ -11,7 +11,6 @@ RUN apk add --no-cache curl tar && \
     esac && \
     curl -L "https://github.com/sirrobot01/decypharr/releases/download/v${VERSION}/decypharr_${ARCH}.tar.gz" \
     -o /tmp/decypharr.tar.gz && \
-    file /tmp/decypharr.tar.gz && \
     tar -xzf /tmp/decypharr.tar.gz -C /tmp && \
     mv /tmp/decypharr /decypharr && \
     chmod +x /decypharr
