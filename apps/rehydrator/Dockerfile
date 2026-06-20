@@ -13,6 +13,9 @@ WORKDIR /tmp
 RUN \
     apk add --no-cache \
         go \
+        curl \
+        tar \
+        gzip \
     && \
     curl -fsSL "https://github.com/raefon/rehydrator/archive/v${VERSION}.tar.gz" \
         | tar xzf - -C /tmp --strip-components 1 \
