@@ -12,21 +12,25 @@ EXPOSE 80
 COPY --from=upstream /home/filebrowser/filebrowser /app/filebrowser/filebrowser
 COPY --from=upstream /home/filebrowser/http/dist/ /app/filebrowser/http/dist/
 COPY --from=ffmpeg [ "/ffmpeg", "/ffprobe", "/usr/local/bin/" ]
+
 COPY ./apps/filebrowser/branding /branding/
 COPY ./apps/filebrowser/scripts/* /usr/local/bin/
 COPY ./apps/filebrowser/config.yaml /app/filebrowser/config.yaml
 COPY ./apps/filebrowser/entrypoint.sh /entrypoint.sh
 
-RUN apk add --no-cache mlocate ncdu tree curl &&\
-	mkdir -p /config/filebrowser/data &&\
-	mkdir -p /config/filebrowser/tmp &&\
-	chown -R kah:kah /config &&\
-	chmod 777 /srv &&\
-	chmod +x /entrypoint.sh \ 
-				/usr/local/bin/claim-plex-server.sh \
-				/usr/local/bin/tenet
+RUN apk add --no-cache mlocate ncdu tree curl && \
+    mkdir -p /config/filebrowser/data/tmp /srv /data && \
+    chmod 777 /srv && \
+    chown -R kah:kah /app/filebrowser /config /srv /data /branding && \
+    chmod +x /entrypoint.sh \
+        /app/filebrowser/filebrowser \
+        /usr/local/bin/claim-plex-server.sh \
+        /usr/local/bin/tenet
+
+WORKDIR /app/filebrowser/http/dist
 
 USER kah
+
 CMD ["/entrypoint.sh"]
 
 LABEL org.opencontainers.image.source="https://github.com/filebrowser/filebrowser"

@@ -1,51 +1,42 @@
 #!/usr/bin/env bash
+set -e
 
-#shellcheck disable=SC1091
+# shellcheck disable=SC1091
 test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
 
-if [[ ! -f "/config/filebrowser/config.yaml" ]]; then
+APP_DIR="/app/filebrowser"
+WEB_DIR="${APP_DIR}/http/dist"
+CONFIG_DIR="/config/filebrowser"
+CONFIG_FILE="${CONFIG_DIR}/config.yaml"
+DEFAULT_CONFIG="${APP_DIR}/config.yaml"
+FILEBROWSER="${APP_DIR}/filebrowser"
+
+mkdir -p "${CONFIG_DIR}/data/tmp" /srv
+
+if [[ ! -f "${CONFIG_FILE}" ]]; then
     printf "Copying over default configuration ...\n"
-    cp /app/filebrowser/config.yaml /config/filebrowser/config.yaml
-    cd /app/filebrowser/http/dist
-    /app/filebrowser/filebrowser set -u bogus,bogus -a -c config.yaml
+    cp "${DEFAULT_CONFIG}" "${CONFIG_FILE}"
+
+    cd "${WEB_DIR}"
+    "${FILEBROWSER}" set -u bogus,bogus -a -c "${CONFIG_FILE}"
 fi
 
-# if [[ ! -f "/config/filebrowser/filebrowser.db" ]]; then
-#     printf "Generating default database ...\n"
-#     /filebrowser config init --disable-preview-resize \
-#         --disable-thumbnails \
-#         --disable-type-detection-by-header \
-#         --branding.name="filebrowser, by KDLHOST " \
-#         --branding.files=/branding \
-#         --branding.disableExternal \
-#         --auth.method=noauth \
-#         --lockPassword \
-#         --database /config/filebrowser/filebrowser.db \
-#         --cache-dir /tmp \
-#         --port 80
-#     # allow commands
-#     /filebrowser config set --database /config/filebrowser/filebrowser.db --commands zip,unzip,rar,unrar,ls,pwd,cd,mv,cp,ln,find,echo,grep,cat,touch,tar,gzip,rm,tree,du,mlocate,updatedb,locate,tenet
-#     # add bogus user
-#     /filebrowser users add 1 bogus --database /config/filebrowser/filebrowser.db
-# fi
-
-data=/srv/data
-if [ ! \( -e "${data}" \) ]
-then
-     echo "%ERROR: data symlink does not exist!" >&2
-     ln -s /data $data
+data="/srv/data"
+if [[ ! -e "${data}" ]]; then
+    printf "Creating data symlink ...\n"
+    ln -s /data "${data}"
 fi
 
-config=/srv/config
-if [ ! \( -e "${config}" \) ]
-then
-     echo "%ERROR: config symlink does not exist!" >&2
-     ln -s /config $config
+config="/srv/config"
+if [[ ! -e "${config}" ]]; then
+    printf "Creating config symlink ...\n"
+    ln -s /config "${config}"
 fi
 
-cd /app/filebrowser/http/dist
-#shellcheck disable=SC2086
+cd "${WEB_DIR}"
+
+# shellcheck disable=SC2086
 exec \
-    /app/filebrowser/filebrowser \
-    -c /config/filebrowser/config.yaml \
+    "${FILEBROWSER}" \
+    -c "${CONFIG_FILE}" \
     "$@"
