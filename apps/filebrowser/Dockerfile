@@ -9,7 +9,8 @@ FROM ghcr.io/raefon/alpine:rolling@sha256:c7120c0a2314b54dd0b82f781348d7add10835
 
 EXPOSE 80
 
-COPY --from=upstream /home/filebrowser/filebrowser /filebrowser
+COPY --from=upstream /home/filebrowser/filebrowser /app/filebrowser/filebrowser
+COPY --from=upstream /home/filebrowser/http/dist/ /app/filebrowser/http/dist/
 COPY --from=ffmpeg [ "/ffmpeg", "/ffprobe", "/usr/local/bin/" ]
 COPY ./apps/filebrowser/branding /branding/
 COPY ./apps/filebrowser/scripts/* /usr/local/bin/

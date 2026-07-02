@@ -6,8 +6,8 @@ server:
     - path: /srv
       config:
         defaultEnabled: true
-  auth:
-    methods:
-      noauth: true
-  frontend:
-    name: "KDLHOST: File Browser"
+auth:
+  methods:
+    noauth: true
+frontend:
+  name: "KDLHOST: File Browser"

@@ -5,7 +5,8 @@ test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
 
 if [[ ! -f "/config/filebrowser/config.yaml" ]]; then
     printf "Copying over default configuration ...\n"
-    mkdir -p /config/filebrowser
+    mkdir -p /config/filebrowser/data
+    mkdir -p /config/filebrowser/tmp
     cp /app/filebrowser/config.yaml /config/filebrowser/config.yaml
     /filebrowser set -u bogus,bogus -a -c config.yaml
 fi
@@ -43,8 +44,9 @@ then
      ln -s /config $config
 fi
 
+cd /app/filebrowser/http/dist
 #shellcheck disable=SC2086
 exec \
-    /filebrowser \
+    /app/filebrowser/filebrowser \
     -c /config/filebrowser/config.yaml \
     "$@"
