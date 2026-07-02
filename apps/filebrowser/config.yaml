@@ -10,4 +10,4 @@ server:
     methods:
       noauth: true
   frontend:
-    name: "Company Files"
+    name: "KDLHOST: File Browser"
