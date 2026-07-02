@@ -1,7 +1,6 @@
 server:
   port: 80
   database: /config/filebrowser/data/filebrowser.db
-  cacheDir: /config/filebrowser/data/tmp
   sources:
     - path: /srv
       config:
