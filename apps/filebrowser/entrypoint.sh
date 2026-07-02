@@ -8,7 +8,7 @@ if [[ ! -f "/config/filebrowser/config.yaml" ]]; then
     mkdir -p /config/filebrowser/data
     mkdir -p /config/filebrowser/tmp
     cp /app/filebrowser/config.yaml /config/filebrowser/config.yaml
-    /filebrowser set -u bogus,bogus -a -c config.yaml
+    /app/filebrowser/filebrowser set -u bogus,bogus -a -c config.yaml
 fi
 
 # if [[ ! -f "/config/filebrowser/filebrowser.db" ]]; then
