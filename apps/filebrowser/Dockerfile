@@ -18,6 +18,9 @@ COPY ./apps/filebrowser/config.yaml /app/filebrowser/config.yaml
 COPY ./apps/filebrowser/entrypoint.sh /entrypoint.sh
 
 RUN apk add --no-cache mlocate ncdu tree curl &&\
+	mkdir -p /config/filebrowser/data &&\
+	mkdir -p /config/filebrowser/tmp &&\
+	chown -R kah:kah /config &&\
 	chmod 777 /srv &&\
 	chmod +x /entrypoint.sh \ 
 				/usr/local/bin/claim-plex-server.sh \
