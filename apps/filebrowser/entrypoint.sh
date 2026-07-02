@@ -5,7 +5,6 @@ set -e
 test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
 
 APP_DIR="/app/filebrowser"
-WEB_DIR="${APP_DIR}/http/dist"
 CONFIG_DIR="/config/filebrowser"
 CONFIG_FILE="${CONFIG_DIR}/config.yaml"
 DEFAULT_CONFIG="${APP_DIR}/config.yaml"
@@ -17,7 +16,7 @@ if [[ ! -f "${CONFIG_FILE}" ]]; then
     printf "Copying over default configuration ...\n"
     cp "${DEFAULT_CONFIG}" "${CONFIG_FILE}"
 
-    cd "${WEB_DIR}"
+    cd "${APP_DIR}"
     "${FILEBROWSER}" set -u bogus,bogus -a -c "${CONFIG_FILE}"
 fi
 
@@ -33,9 +32,8 @@ if [[ ! -e "${config}" ]]; then
     ln -s /config "${config}"
 fi
 
-cd "${WEB_DIR}"
+cd "${APP_DIR}"
 
-# shellcheck disable=SC2086
 exec \
     "${FILEBROWSER}" \
     -c "${CONFIG_FILE}" \

@@ -9,8 +9,7 @@ FROM ghcr.io/raefon/alpine:rolling@sha256:c7120c0a2314b54dd0b82f781348d7add10835
 
 EXPOSE 80
 
-COPY --from=upstream /home/filebrowser/filebrowser /app/filebrowser/filebrowser
-COPY --from=upstream /home/filebrowser/http/dist/ /app/filebrowser/http/dist/
+COPY --from=upstream /home/filebrowser/ /app/filebrowser/
 COPY --from=ffmpeg [ "/ffmpeg", "/ffprobe", "/usr/local/bin/" ]
 
 COPY ./apps/filebrowser/branding /branding/
@@ -27,10 +26,10 @@ RUN apk add --no-cache mlocate ncdu tree curl && \
         /usr/local/bin/claim-plex-server.sh \
         /usr/local/bin/tenet
 
-WORKDIR /app/filebrowser/http/dist
+WORKDIR /app/filebrowser
 
 USER kah
 
 CMD ["/entrypoint.sh"]
 
-LABEL org.opencontainers.image.source="https://github.com/filebrowser/filebrowser"
+LABEL org.opencontainers.image.source="https://github.com/gtsteffaniak/filebrowser"
