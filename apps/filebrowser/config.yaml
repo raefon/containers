@@ -1,0 +1,11 @@
+server:
+  cacheDir: /config/filebrowser/data/tmp
+  sources:
+    - path: /srv
+      config:
+        defaultEnabled: true
+  auth:
+    methods:
+      noauth: true
+  frontend:
+    name: "Company Files"
