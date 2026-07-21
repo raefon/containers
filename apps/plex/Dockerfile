@@ -1,6 +1,6 @@
 FROM ghcr.io/raefon/ubuntu:jammy-20251013@sha256:4cf9650d9ae8dbce0faf65131fe01f9a20b23353a4900f836a0e2bba5d3c371d
 
-ARG TARGETPLATFORM
+ARG TARGETARCH
 ARG VERSION
 ARG CHANNEL
 
@@ -15,42 +15,34 @@ ENV NVIDIA_DRIVER_CAPABILITIES="compute,video,utility" \
 
 # hadolint ignore=DL3008,DL3015,SC2039,SC2086
 RUN \
-    case "${TARGETPLATFORM}" in \
-        'linux/amd64') \
-            export ARCH='amd64'; \
-        ;; \
-        'linux/arm64') \
-            export ARCH='arm64'; \
-        ;; \
-    esac \
-    && \
-    apt-get -qq update \
-    && \
+    echo "Building for ${TARGETARCH}" && \
+    apt-get -qq update && \
     apt-get -qq install -y \
         ca-certificates \
+        curl \
         libusb-dev \
         uuid-runtime \
-        xmlstarlet \
-    && \
+        xmlstarlet && \
     curl -fsSL -o /tmp/plex.deb \
-        "${PLEX_DOWNLOAD}/${VERSION}/debian/plexmediaserver_${VERSION}_${ARCH}.deb" \
-    && \
-    dpkg -i --force-confold /tmp/plex.deb \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-    && apt-get autoremove -y \
-    && apt-get clean \
-    && \
+        "${PLEX_DOWNLOAD}/${VERSION}/debian/plexmediaserver_${VERSION}_${TARGETARCH}.deb" && \
+    dpkg -i --force-confold /tmp/plex.deb && \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
+    apt-get autoremove -y && \
+    apt-get clean && \
     rm -rf \
         /etc/default/plexmediaserver \
         /tmp/* \
         /var/lib/apt/lists/* \
-        /var/tmp/ \
-    && chown -R root:root /app \
-    && chmod -R 755 "${PLEX_MEDIA_SERVER_HOME}" \
-    && printf "umask %d\n" "${UMASK}" >> /etc/bash.bashrc
+        /var/tmp/ && \
+    chown -R root:root /app && \
+    chmod -R 755 "${PLEX_MEDIA_SERVER_HOME}" && \
+    printf "umask %d\n" "${UMASK}" >> /etc/bash.bashrc
 
 WORKDIR "${PLEX_MEDIA_SERVER_HOME}"
+
 USER kah
+
 COPY ./apps/plex/plex-preferences.sh /scripts/plex-preferences.sh
 COPY ./apps/plex/entrypoint.sh /entrypoint.sh
+
 CMD ["/entrypoint.sh"]
