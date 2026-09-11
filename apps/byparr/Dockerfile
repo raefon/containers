@@ -47,7 +47,7 @@ RUN set -eux; \
 
 RUN mkdir -p /cache && \
     uv sync --no-dev && \
-    uv run python -m camoufox fetch && \
+    uv run camoufox fetch && \
     uv cache clean && \
     chmod -R o+rX /app /opt/uv/python && \
     chmod -R o+rwX /cache && \
