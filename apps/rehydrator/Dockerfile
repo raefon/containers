@@ -35,7 +35,7 @@ RUN set -eux; \
     GOARM="${GOARM_VALUE}" \
     go build \
       -trimpath \
-      -ldflags="-s -w" \
+      -ldflags="-s -w -X main.version=${VERSION}" \
       -o /tmp/rehydrator \
       ./cmd/rehydrator
 
@@ -47,6 +47,9 @@ COPY ./apps/rehydrator/entrypoint.sh /entrypoint.sh
 RUN chmod +x /usr/local/bin/rehydrator /entrypoint.sh
 
 USER kah
-CMD ["/entrypoint.sh"]
+# Kubernetes args are appended to the launcher rather than replacing it.
+# Preserve signal forwarding/reaping supplied by the base image.
+ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]
+CMD []
 
 LABEL org.opencontainers.image.source="https://github.com/raefon/rehydrator"

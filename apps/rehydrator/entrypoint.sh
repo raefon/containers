@@ -1,10 +1,40 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-#shellcheck disable=SC1091
-test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
+if [[ -f /scripts/umask.sh ]]; then
+    # shellcheck disable=SC1091
+    source /scripts/umask.sh
+fi
 
-#shellcheck disable=SC2086
-exec \
-    /usr/local/bin/rehydrator \
-    --config /config/rehydrator.yaml \
+# Match application precedence: command-line role overrides REHYDRATOR_ROLE.
+# Explicit --config arguments are forwarded last and override this default.
+role="${REHYDRATOR_ROLE:-combined}"
+arguments=("$@")
+for ((index = 0; index < ${#arguments[@]}; index++)); do
+    case "${arguments[index]}" in
+        --role|-role)
+            index=$((index + 1))
+            role="${arguments[index]:-}"
+            ;;
+        --role=*|-role=*)
+            role="${arguments[index]#*=}"
+            ;;
+        --config|-config)
+            index=$((index + 1))
+            ;;
+        --) break ;;
+        -*) ;;
+        *) break ;;
+    esac
+done
+
+case "$role" in
+    gateway) default_config=/etc/rehydrator/config.yaml ;;
+    *) default_config=/config/rehydrator.yaml ;;
+esac
+
+# No mount waits, directory creation or ownership changes here. The gateway
+# must start independently, including when its configuration is read-only.
+exec /usr/local/bin/rehydrator \
+    --config "${REHYDRATOR_CONFIG:-$default_config}" \
     "$@"
