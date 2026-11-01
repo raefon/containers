@@ -16,12 +16,22 @@ WORKDIR /src/rehydrator
 # hadolint ignore=DL3018
 RUN apk add --no-cache \
       go \
+      nodejs \
+      npm \
       curl \
       tar \
       gzip
 
 RUN curl -fsSL "https://github.com/raefon/rehydrator/archive/v${VERSION}.tar.gz" \
       | tar xzf - -C /src/rehydrator --strip-components 1
+
+# Build from the same release source as the Go binary. Vite writes directly
+# into internal/webui/dist, which Go embeds; no Node runtime is shipped.
+RUN npm --prefix web ci \
+    && npm --prefix web run build
+
+# Catch missing embedded frontend assets before publishing the container.
+RUN go test ./internal/webui
 
 RUN go mod download
 
