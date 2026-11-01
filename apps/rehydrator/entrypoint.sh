@@ -6,6 +6,12 @@ if [[ -f /scripts/umask.sh ]]; then
     source /scripts/umask.sh
 fi
 
+# Support explicit command overrides (including dgoss CLI keepalive commands).
+# Flags continue to launch Rehydrator through the normal configuration path.
+if (( $# > 0 )) && [[ "$1" != -* ]]; then
+    exec "$@"
+fi
+
 # Match application precedence: command-line role overrides REHYDRATOR_ROLE.
 # Explicit --config arguments are forwarded last and override this default.
 role="${REHYDRATOR_ROLE:-combined}"

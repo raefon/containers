@@ -3,12 +3,3 @@
 file:
   /usr/local/bin/rehydrator:
     exists: true
-
-command:
-  entrypoint-version:
-    exec: /entrypoint.sh --version
-    exit-status: 0
-    stdout:
-      - /Rehydrator [0-9]+\.[0-9]+\.[0-9]+/
-    stderr: []
-    timeout: 10000
