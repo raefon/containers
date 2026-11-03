@@ -22,3 +22,5 @@
 file:
   /app/filebrowser/filebrowser:
     exists: true
+  /app/filebrowser/migrate_config.py:
+    exists: true

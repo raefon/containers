@@ -10,26 +10,21 @@ CONFIG_FILE="${CONFIG_DIR}/config.yaml"
 DEFAULT_CONFIG="${APP_DIR}/config.yaml"
 FILEBROWSER="${APP_DIR}/filebrowser"
 
-mkdir -p "${CONFIG_DIR}/data/tmp" /srv
+mkdir -p "${CONFIG_DIR}/data/tmp" /storage
 
 if [[ ! -f "${CONFIG_FILE}" ]]; then
     printf "Copying over default configuration ...\n"
     cp "${DEFAULT_CONFIG}" "${CONFIG_FILE}"
-
-    cd "${APP_DIR}"
-    "${FILEBROWSER}" set -u bogus,bogus -a -c "${CONFIG_FILE}"
 fi
 
-data="/srv/data"
-if [[ ! -e "${data}" ]]; then
-    printf "Creating data symlink ...\n"
-    ln -s /data "${data}"
-fi
+python3 "${APP_DIR}/migrate_config.py" "${CONFIG_FILE}"
 
-config="/srv/config"
-if [[ ! -e "${config}" ]]; then
-    printf "Creating config symlink ...\n"
-    ln -s /config "${config}"
+# Only unlink the two legacy aliases; never remove target directories or custom links.
+if [[ -L /srv/data && "$(readlink /srv/data)" == /data ]]; then
+    unlink /srv/data
+fi
+if [[ -L /srv/config && "$(readlink /srv/config)" == /config ]]; then
+    unlink /srv/config
 fi
 
 cd "${APP_DIR}"

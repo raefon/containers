@@ -1,9 +1,16 @@
-server:
+http:
   port: 80
-  database: /config/filebrowser/data/filebrowser.db
+server:
+  database:
+    path: /config/filebrowser/data/filebrowser.sqlite
   cacheDir: /config/filebrowser/data/tmp
   sources:
-    - path: /srv
+    - path: /storage
+      name: Storage
+      config:
+        defaultEnabled: true
+    - path: /config
+      name: Config
       config:
         defaultEnabled: true
 auth:

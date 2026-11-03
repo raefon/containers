@@ -16,11 +16,12 @@ COPY ./apps/filebrowser/branding /branding/
 COPY ./apps/filebrowser/scripts/* /usr/local/bin/
 COPY ./apps/filebrowser/config.yaml /app/filebrowser/config.yaml
 COPY ./apps/filebrowser/entrypoint.sh /entrypoint.sh
+COPY ./apps/filebrowser/migrate_config.py /app/filebrowser/migrate_config.py
 
-RUN apk add --no-cache mlocate ncdu tree curl && \
-    mkdir -p /config/filebrowser/data/tmp /srv /data && \
+RUN apk add --no-cache mlocate ncdu tree curl python3 py3-yaml && \
+    mkdir -p /config/filebrowser/data/tmp /srv /data /storage && \
     chmod 777 /srv && \
-    chown -R kah:kah /app/filebrowser /config /srv /data /branding && \
+    chown -R kah:kah /app/filebrowser /config /srv /data /storage /branding && \
     chmod +x /entrypoint.sh \
         /app/filebrowser/filebrowser \
         /usr/local/bin/claim-plex-server.sh \
