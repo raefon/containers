@@ -10,6 +10,8 @@ if [[ -f /config/sonarr/config.xml ]]; then
     current_branch="$(xmlstarlet sel -t -v "//Branch" -nl /config/sonarr/config.xml)"
     current_analytics_enabled="$(xmlstarlet sel -t -v "//AnalyticsEnabled" -nl /config/sonarr/config.xml)"
     current_api_key="$(xmlstarlet sel -t -v "//ApiKey" -nl /config/config.xml)"
+    current_allowed_hosts="$(xmlstarlet sel -t -v "//AllowedHosts" -nl /config/sonarr/config.xml)"
+    current_trusted_networks="$(xmlstarlet sel -t -v "//TrustedNetworks" -nl /config/sonarr/config.xml)"
     current_authentication_method="$(xmlstarlet sel -t -v "//AuthenticationMethod" -nl /config/sonarr/config.xml)"
     current_authentication_required="$(xmlstarlet sel -t -v "//AuthenticationRequired" -nl /config/sonarr/config.xml)"
     current_instance_name="$(xmlstarlet sel -t -v "//InstanceName" -nl /config/sonarr/config.xml)"
@@ -23,7 +25,8 @@ if [[ -f /config/sonarr/config.xml ]]; then
 fi
 
 # Update config.xml with environment variables
-envsubst < /app/config.xml.tmpl > /config/sonarr/config.xml
+mkdir -p /config/sonarr || exit 1
+envsubst < /app/config.xml.tmpl > /config/sonarr/config.xml || exit 1
 
 # Override configuation values from existing config.xml if there are no SONARR__ variables set
 [[ -z "${SONARR__LOG_LEVEL}" && -n "${current_log_level}" ]] && xmlstarlet edit --inplace --update //LogLevel -v "${current_log_level}" /config/sonarr/config.xml
@@ -31,6 +34,8 @@ envsubst < /app/config.xml.tmpl > /config/sonarr/config.xml
 [[ -z "${SONARR__BRANCH}" && -n "${current_branch}" ]] && xmlstarlet edit --inplace --update //Branch -v "${current_branch}" /config/sonarr/config.xml
 [[ -z "${SONARR__ANALYTICS_ENABLED}" && -n "${current_analytics_enabled}" ]] && xmlstarlet edit --inplace --update //AnalyticsEnabled -v "${current_analytics_enabled}" /config/sonarr/config.xml
 [[ -z "${SONARR__API_KEY}" && -n "${current_api_key}" ]] && xmlstarlet edit --inplace --update //ApiKey -v "${current_api_key}" /config/sonarr/config.xml
+[[ -z "${SONARR__ALLOWED_HOSTS}" && -n "${current_allowed_hosts}" ]] && xmlstarlet edit --inplace --update //AllowedHosts -v "${current_allowed_hosts}" /config/sonarr/config.xml
+[[ -z "${SONARR__TRUSTED_NETWORKS}" && -n "${current_trusted_networks}" ]] && xmlstarlet edit --inplace --update //TrustedNetworks -v "${current_trusted_networks}" /config/sonarr/config.xml
 [[ -z "${SONARR__AUTHENTICATION_METHOD}" && -n "${current_authentication_method}" ]] && xmlstarlet edit --inplace --update //AuthenticationMethod -v "${current_authentication_method}" /config/sonarr/config.xml
 [[ -z "${SONARR__AUTHENTICATION_REQUIRED}" && -n "${current_authentication_required}" ]] && xmlstarlet edit --inplace --update //AuthenticationRequired -v "${current_authentication_required}" /config/sonarr/config.xml
 [[ -z "${SONARR__INSTANCE_NAME}" && -n "${current_instance_name}" ]] && xmlstarlet edit --inplace --update //InstanceName -v "${current_instance_name}" /config/sonarr/config.xml

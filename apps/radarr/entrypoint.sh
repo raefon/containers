@@ -7,6 +7,8 @@ test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
 if [[ -f /config/radarr/config.xml ]]; then
     current_analytics_enabled="$(xmlstarlet sel -t -v "//AnalyticsEnabled" -nl /config/radarr/config.xml)"
     current_api_key="$(xmlstarlet sel -t -v "//ApiKey" -nl /config/radarr/config.xml)"
+    current_allowed_hosts="$(xmlstarlet sel -t -v "//AllowedHosts" -nl /config/radarr/config.xml)"
+    current_trusted_networks="$(xmlstarlet sel -t -v "//TrustedNetworks" -nl /config/radarr/config.xml)"
     current_authentication_method="$(xmlstarlet sel -t -v "//AuthenticationMethod" -nl /config/radarr/config.xml)"
     current_authentication_required="$(xmlstarlet sel -t -v "//AuthenticationRequired" -nl /config/radarr/config.xml)"
     current_branch="$(xmlstarlet sel -t -v "//Branch" -nl /config/radarr/config.xml)"
@@ -23,11 +25,14 @@ if [[ -f /config/radarr/config.xml ]]; then
 fi
 
 # Update config.xml with environment variables
-envsubst < /app/config.xml.tmpl > /config/radarr/config.xml
+mkdir -p /config/radarr || exit 1
+envsubst < /app/config.xml.tmpl > /config/radarr/config.xml || exit 1
 
 # Override configuation values from existing config.xml if there are no RADARR__ variables set
 [[ -z "${RADARR__ANALYTICS_ENABLED}" && -n "${current_analytics_enabled}" ]] && xmlstarlet edit --inplace --update //AnalyticsEnabled -v "${current_analytics_enabled}" /config/radarr/config.xml
 [[ -z "${RADARR__API_KEY}" && -n "${current_api_key}" ]] && xmlstarlet edit --inplace --update //ApiKey -v "${current_api_key}" /config/radarr/config.xml
+[[ -z "${RADARR__ALLOWED_HOSTS}" && -n "${current_allowed_hosts}" ]] && xmlstarlet edit --inplace --update //AllowedHosts -v "${current_allowed_hosts}" /config/radarr/config.xml
+[[ -z "${RADARR__TRUSTED_NETWORKS}" && -n "${current_trusted_networks}" ]] && xmlstarlet edit --inplace --update //TrustedNetworks -v "${current_trusted_networks}" /config/radarr/config.xml
 [[ -z "${RADARR__AUTHENTICATION_METHOD}" && -n "${current_authentication_method}" ]] && xmlstarlet edit --inplace --update //AuthenticationMethod -v "${current_authentication_method}" /config/radarr/config.xml
 [[ -z "${RADARR__AUTHENTICATION_REQUIRED}" && -n "${current_authentication_required}" ]] && xmlstarlet edit --inplace --update //AuthenticationRequired -v "${current_authentication_required}" /config/radarr/config.xml
 [[ -z "${RADARR__BRANCH}" && -n "${current_branch}" ]] && xmlstarlet edit --inplace --update //Branch -v "${current_branch}" /config/radarr/config.xml
