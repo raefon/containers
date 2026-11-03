@@ -6,13 +6,14 @@ if [[ "${RECYCLARR_ENABLED:-true}" != true ]]; then
     exit 0
 fi
 config="${RECYCLARR_CONFIG:-/etc/recyclarr/recyclarr.yml}"
-export RECYCLARR_APP_DATA="${RECYCLARR_APP_DATA:-/config/recyclarr}"
+export RECYCLARR_CONFIG_DIR="${RECYCLARR_CONFIG_DIR:-${RECYCLARR_APP_DATA:-/config/recyclarr}}"
+unset RECYCLARR_APP_DATA
 if [[ ! -r "$config" || -z "${SONARR_API_KEY:-}" || -z "${RADARR_API_KEY:-}" ]]; then
     echo "Recyclarr needs its config and tenant Arr API-key environment variables" >&2
     exit 1
 fi
-mkdir -p "$RECYCLARR_APP_DATA"
-exec 9>"$RECYCLARR_APP_DATA/sync.lock"
+mkdir -p "$RECYCLARR_CONFIG_DIR"
+exec 9>"$RECYCLARR_CONFIG_DIR/sync.lock"
 if ! flock -n 9; then
     echo "Recyclarr sync already running; skipping overlapping invocation"
     exit 0
@@ -22,7 +23,7 @@ if [[ "$(recyclarr --version)" != v8.* ]]; then
     exit 1
 fi
 # The scheduled first run also needs a recovery snapshot, even without provisioning.
-python3 - "$RECYCLARR_APP_DATA" <<'PYTHON'
+python3 - "$RECYCLARR_CONFIG_DIR" <<'PYTHON'
 import json, os, sys, urllib.request
 path=os.path.join(sys.argv[1], 'before-managed-sync.json')
 if not os.path.exists(path):

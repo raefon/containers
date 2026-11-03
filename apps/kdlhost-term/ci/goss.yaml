@@ -9,7 +9,7 @@ file:
     mode: "0755"
 command:
   recyclarr-version:
-    exec: recyclarr --version
+    exec: env RECYCLARR_CONFIG_DIR=/tmp/recyclarr-ci recyclarr --version
     exit-status: 0
     stdout:
       - /v8\./
