@@ -1,4 +1,4 @@
-FROM ghcr.io/recyclarr/recyclarr:latest AS recyclarr
+FROM ghcr.io/recyclarr/recyclarr:8.8.1 AS recyclarr
 FROM ghcr.io/raefon/alpine:rolling@sha256:1935a7e3d0790942cae110cceb55132a3b81cefd5f74e6ee4717e0c67cb20a87
 ARG TARGETARCH
 ARG VERSION
@@ -7,7 +7,7 @@ COPY ./apps/kdlhost-term/scripts/* /usr/local/bin/
 #COPY ./scripts/* /usr/local/bin/
 COPY ./apps/kdlhost-term/app/* /app/kdlhost-term/
 #COPY ./app/* /app/kdlhost-term/
-RUN apk add --no-cache shadow bash fish curl openssl ca-certificates py3-pip pipx py3-virtualenv nano tmux ruby ruby-dev build-base musl-dev python3-dev linux-headers git dotnet10-runtime \
+RUN apk add --no-cache shadow bash fish curl openssl ca-certificates py3-pip pipx py3-virtualenv nano tmux ruby ruby-dev build-base musl-dev python3-dev linux-headers git dotnet10-runtime util-linux \
 	&& pipx ensurepath \
 	&& gem install tmuxinator
 
@@ -22,6 +22,7 @@ ADD --chmod=755 https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl /usr/l
 
 # add Recyclarr (musl binary from official image)
 COPY --link --from=recyclarr /app /app/recyclarr
+RUN ln -s /app/recyclarr/recyclarr/recyclarr /usr/local/bin/recyclarr
 
 # add PlexTraktSync
 RUN PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin PIPX_MAN_DIR=/usr/local/share/man pipx install PlexTraktSync

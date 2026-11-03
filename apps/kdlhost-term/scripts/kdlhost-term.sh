@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -euo pipefail
 
 test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
 
@@ -38,5 +38,28 @@ fi
 export HOME=/config/kdlhost-term
 export PATH=$PATH:$HOME/.local/bin/
 
-# Launch kdlhost-ttyd.sh
-/usr/local/bin/kdlhost-ttyd.sh
+# Preserve user jobs; add exactly one managed Recyclarr job without editing their file.
+managed="$HOME/.managed-crontab"
+grep -v '# managed-recyclarr' "$HOME/crontab" > "$managed" || true
+if [[ "${RECYCLARR_ENABLED:-false}" == true ]]; then
+    # A stable tenant identifier staggers daily work across tenants.
+    minute=$(printf '%s' "${RECYCLARR_INSTANCE:-tenant}" | cksum | awk '{print $1 % 60}')
+    schedule="${RECYCLARR_CRON:-$minute 5 * * *}"
+    if [[ "$schedule" == *$'\n'* ]]; then echo "Invalid Recyclarr schedule" >&2; exit 1; fi
+    # Existing explicit user jobs take precedence, avoiding duplicate scheduled syncs.
+    if ! grep -Ev '^\s*(#|$)' "$managed" | grep -q 'recyclarr'; then
+        printf '%s /usr/local/bin/recyclarr-sync.sh # managed-recyclarr\n' "$schedule" >> "$managed"
+    fi
+fi
+cron_pid=""
+if grep -Ev '^[[:space:]]*(#|$)' "$managed" | grep -q .; then
+    supercronic -test "$managed"
+    supercronic "$managed" &
+    cron_pid=$!
+fi
+/usr/local/bin/kdlhost-ttyd.sh &
+terminal_pid=$!
+cleanup() { kill "$cron_pid" "$terminal_pid" 2>/dev/null || true; wait "$cron_pid" "$terminal_pid" 2>/dev/null || true; }
+trap cleanup EXIT
+trap 'exit 0' TERM INT
+if [[ -n "$cron_pid" ]]; then wait -n "$cron_pid" "$terminal_pid"; else wait "$terminal_pid"; fi

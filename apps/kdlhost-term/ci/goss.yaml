@@ -3,3 +3,13 @@
 file:
   /usr/local/bin/kdlhost-term.sh:
     exists: true
+
+  /usr/local/bin/recyclarr-sync.sh:
+    exists: true
+    mode: "0755"
+command:
+  recyclarr-version:
+    exec: recyclarr --version
+    exit-status: 0
+    stdout:
+      - /v8\./
