@@ -17,6 +17,7 @@ COPY ./apps/filebrowser/scripts/* /usr/local/bin/
 COPY ./apps/filebrowser/config.yaml /app/filebrowser/config.yaml
 COPY ./apps/filebrowser/entrypoint.sh /entrypoint.sh
 COPY ./apps/filebrowser/migrate_config.py /app/filebrowser/migrate_config.py
+COPY ./apps/filebrowser/bootstrap_sidebar.py /app/filebrowser/bootstrap_sidebar.py
 
 RUN apk add --no-cache mlocate ncdu tree curl python3 py3-yaml && \
     mkdir -p /config/filebrowser/data/tmp /srv /data /storage && \

@@ -46,3 +46,17 @@ bash -n apps/filebrowser/entrypoint.sh
 References:
 - https://filebrowserquantum.com/en/docs/getting-started/v2/migration/
 - https://filebrowserquantum.com/en/docs/configuration/sources/
+
+On startup, `bootstrap_sidebar.py` waits up to 90 seconds for the local API and
+seeds Storage and Config sidebar links once for the no-auth account. Source
+permissions and scoped paths are preserved; custom links are retained. The
+marker beside the configured database (`<database>.sidebar-v1.json`) is written
+only after API readback confirms the links. Later restarts preserve manual
+sidebar removals and ordering. This fixes sidebar visibility independently of
+source grants; it never grants access to another source. Custom authentication
+is skipped. Set `FILEBROWSER_INIT_SIDEBAR=false` to disable this bootstrap.
+
+The helper uses the API rather than writing SQLite directly. Filebrowser remains
+PID 1; a failed bootstrap logs an error and is retried on the next restart without
+preventing the server from running. To deliberately retry a completed bootstrap,
+remove only its `.sidebar-v1.json` marker and restart the container.

@@ -29,6 +29,12 @@ fi
 
 cd "${APP_DIR}"
 
+# A source grant does not automatically create a saved sidebar link. Seed once;
+# keep Filebrowser as PID 1 and leave later user customizations untouched.
+if [[ "${FILEBROWSER_INIT_SIDEBAR:-true}" == "true" ]]; then
+    python3 "${APP_DIR}/bootstrap_sidebar.py" "${CONFIG_FILE}" &
+fi
+
 exec \
     "${FILEBROWSER}" \
     -c "${CONFIG_FILE}" \
