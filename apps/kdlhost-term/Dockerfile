@@ -14,6 +14,9 @@ RUN apk add --no-cache shadow bash fish curl openssl ca-certificates py3-pip pip
 # add ttyd
 ADD --chmod=755 https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 /usr/local/bin/ttyd
 
+# Customize the bundled ttyd frontend without maintaining a separate frontend build.
+RUN python3 /usr/local/bin/kdlhost-terminal-page.py /app/kdlhost-term/terminal.html
+
 # add supercronic
 ADD --chmod=755 https://github.com/aptible/supercronic/releases/download/v0.2.33/supercronic-linux-amd64 /usr/local/bin/supercronic
 

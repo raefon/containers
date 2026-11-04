@@ -13,3 +13,7 @@ the old stock commented mouse/history settings and preserves explicit custom
 overrides. To disable mouse handling, set `set -g mouse off` in that file and
 reload the tmux configuration. Current sessions can enable scrolling immediately
 with `tmux set -g mouse on`.
+
+Right-click inside the terminal opens the tmux/application menu without the browser
+context menu. The image generates a custom page from its installed ttyd frontend
+at build time; other parts of the page keep their normal browser behavior.
