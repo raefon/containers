@@ -32,6 +32,18 @@ if [[ ! -f "/config/kdlhost-term/.tmux.conf.local" ]]; then
     printf "Creating FILE: /config/kdlhost-term/.tmux.conf.local ...\n"
     cp -r /app/kdlhost-term/tmux.conf.local /config/kdlhost-term/.tmux.conf.local
 fi
+# Migrate only the stock commented defaults; preserve explicit user overrides.
+python3 - "/config/kdlhost-term/.tmux.conf.local" <<'PYTHON'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+original = path.read_text()
+updated = original.replace("\n#set -g history-limit 10000\n", "\nset -g history-limit 20000\n")
+updated = updated.replace("\n#set -g mouse on\n", "\nset -g mouse on\n")
+if updated != original:
+    path.write_text(updated)
+PYTHON
+
 # Start lshell in the background
 # readonly PATH=$HOME/programs
 
