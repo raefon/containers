@@ -1,5 +1,5 @@
 FROM alpine:3.23
-MAINTAINER David Personette <dperson@gmail.com>
+LABEL org.opencontainers.image.source="https://github.com/raefon/containers"
 
 # Install openvpn
 RUN apk --no-cache --no-progress upgrade && \
@@ -10,7 +10,7 @@ RUN apk --no-cache --no-progress upgrade && \
     addgroup -S vpn && \
     rm -rf /tmp/*
 
-COPY openvpn.sh /usr/bin/
+COPY apps/openvpn-client/openvpn.sh /usr/bin/
 
 HEALTHCHECK --interval=60s --timeout=15s --start-period=120s \
              CMD curl -LSs 'https://api.ipify.org'
