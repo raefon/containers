@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.source="https://github.com/raefon/containers" \
 # Install openvpn
 RUN apk --no-cache --no-progress upgrade && \
     apk --no-cache --no-progress add bash curl ip6tables iptables openvpn \
-                shadow tini tzdata && \
+                shadow su-exec tini tzdata && \
     ln -sf iptables-nft /sbin/iptables && \
     ln -sf ip6tables-nft /sbin/ip6tables && \
     addgroup -S vpn && \
