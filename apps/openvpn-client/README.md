@@ -1,4 +1,4 @@
-[![logo](https://raw.githubusercontent.com/raefon/openvpn-client/main/logo.png)](https://openvpn.net/)
+[![logo](https://raw.githubusercontent.com/raefon/containers/main/apps/openvpn-client/logo.png)](https://openvpn.net/)
 
 # OpenVPN
 
@@ -39,7 +39,7 @@ container) when you launch the service in its container.
 
 **NOTE 5**: If you need a template for using this container with
 `docker-compose`, see the example
-[file](https://github.com/raefon/openvpn-client/raw/main/docker-compose.yml).
+[file](https://github.com/raefon/containers/blob/main/apps/openvpn-client/docker-compose.yml).
 
 **NOTE 6**: If you need IPv6, or the errors really bother you add a
 `--sysctl net.ipv6.conf.all.disable_ipv6=0` to the docker run command.
@@ -48,7 +48,7 @@ container) when you launch the service in its container.
 
     sudo cp /path/to/vpn.crt /some/path/vpn-ca.crt
     sudo docker run -it --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
-                -v /some/path:/vpn -d ghcr.io/raefon/openvpn-client \
+                -v /some/path:/vpn -d ghcr.io/raefon/kdlhost-openvpn-client \
                 -v 'vpn.server.name;username;password'
     sudo docker restart vpn
 
@@ -91,7 +91,7 @@ Running the following on your docker host should give you the correct network:
 
     sudo cp /path/to/vpn.crt /some/path/vpn-ca.crt
     sudo docker run -it --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
-                -v /some/path:/vpn -d ghcr.io/raefon/openvpn-client \
+                -v /some/path:/vpn -d ghcr.io/raefon/kdlhost-openvpn-client \
                 -r 192.168.1.0/24 -v 'vpn.server.name;username;password'
 
 **NOTE**: if you have a port you want to make available, you have to add the
@@ -100,7 +100,7 @@ the second container (that's what `--net=container:vpn` does).
 
 ## Configuration
 
-    sudo docker run -it --rm ghcr.io/raefon/openvpn-client -h
+    sudo docker run -it --rm ghcr.io/raefon/kdlhost-openvpn-client -h
 
     Usage: openvpn.sh [-opt] [command]
     Options (fields in '[]' are optional, '<>' are required):
@@ -196,13 +196,13 @@ use external storage for `/vpn`:
 
     sudo cp /path/to/vpn.crt /some/path/vpn-ca.crt
     sudo docker run -it --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
-                -v /some/path:/vpn -d ghcr.io/raefon/openvpn-client \
+                -v /some/path:/vpn -d ghcr.io/raefon/kdlhost-openvpn-client \
                 -v 'vpn.server.name;username;password'
 
 Or you can store it in the container:
 
     cat /path/to/vpn.crt | sudo docker run -it --cap-add=NET_ADMIN \
-                --device /dev/net/tun --name vpn -d ghcr.io/raefon/openvpn-client \
+                --device /dev/net/tun --name vpn -d ghcr.io/raefon/kdlhost-openvpn-client \
                 -v 'vpn.server.name;username;password' tee /vpn/vpn-ca.crt \
                 >/dev/null
     sudo docker restart vpn
@@ -214,7 +214,7 @@ block all outbound traffic if the VPN is down.
 
     sudo cp /path/to/vpn.crt /some/path/vpn-ca.crt
     sudo docker run -it --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
-                -v /some/path:/vpn -d ghcr.io/raefon/openvpn-client -f "" \
+                -v /some/path:/vpn -d ghcr.io/raefon/kdlhost-openvpn-client -f "" \
                 -v 'vpn.server.name;username;password'
 
 ### DNS Issues (May Look Like You Can't Connect To Anything)
@@ -225,7 +225,7 @@ get from your VPN. You'll need to add the `--dns` command line option to the
 
     sudo cp /path/to/vpn.crt /some/path/vpn-ca.crt
     sudo docker run -it --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
-                --dns 8.8.4.4 -v /some/path:/vpn -d ghcr.io/raefon/openvpn-client \
+                --dns 8.8.4.4 -v /some/path:/vpn -d ghcr.io/raefon/kdlhost-openvpn-client \
                 -v 'vpn.server.name;username;password'
 
 ### Run with client certificates
@@ -238,7 +238,7 @@ directory.
     sudo cp /path/to/client.key /some/path/client.key
     sudo cp /path/to/vpn.conf /some/path/vpn.conf
     sudo docker run -it --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
-                -v /some/path:/vpn -d ghcr.io/raefon/openvpn-client
+                -v /some/path:/vpn -d ghcr.io/raefon/kdlhost-openvpn-client
 
 The vpn.conf should look like this:
 
@@ -263,11 +263,11 @@ In case you want to use your client configuration in /vpn named vpn.conf
 but adding your vpn user and password by command line
 
     sudo docker run -it --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
-            -v /some/path:/vpn -d ghcr.io/raefon/openvpn-client -a 'username;password'
+            -v /some/path:/vpn -d ghcr.io/raefon/kdlhost-openvpn-client -a 'username;password'
 
 # User Feedback
 
 ## Issues
 
 If you have any problems with or questions about this image, please contact me
-through a [GitHub issue](https://github.com/raefon/openvpn-client/issues).
+through a [GitHub issue](https://github.com/raefon/containers/issues).

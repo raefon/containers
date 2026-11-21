@@ -1,5 +1,5 @@
 ---
-app: openvpn-client
+app: kdlhost-openvpn-client
 base: false
 channels:
   - name: stable
