@@ -1,5 +1,6 @@
 FROM alpine:3.23
-LABEL org.opencontainers.image.source="https://github.com/raefon/containers"
+LABEL org.opencontainers.image.source="https://github.com/raefon/containers" \
+      org.opencontainers.image.description="OpenVPN client with nftables firewall support"
 
 # Install openvpn
 RUN apk --no-cache --no-progress upgrade && \
