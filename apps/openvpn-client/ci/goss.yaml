@@ -1,0 +1,9 @@
+command:
+  iptables-nft-backend:
+    exec: iptables -V
+    exit-status: 0
+    stdout:
+      - nf_tables
+file:
+  /usr/bin/openvpn.sh:
+    exists: true
