@@ -25,7 +25,7 @@ def initialize(config, marker, api):
     links = list(user.get('sidebarLinks') or [])
     expected = []
     for source in config.get('server', {}).get('sources', []):
-        if source.get('path') not in ('/storage', '/config'):
+        if source.get('path') not in ('/storage', '/data', '/config'):
             continue
         if source.get('config', {}).get('defaultEnabled') is not True:
             continue
@@ -35,11 +35,30 @@ def initialize(config, marker, api):
             raise ValueError('Managed source grants are not ready')
         if not scope.get('permissions', {}).get('view'):
             continue
-        expected.append(name)
-        if any(x.get('category', '').split('-')[0] == 'source' and x.get('sourceName') == name for x in links):
-            continue
-        links.append({'name': name, 'category': 'source', 'target': scope.get('scope') or '/',
-                      'icon': '', 'sourceName': name})
+        expected.append((name, scope.get('scope') or '/'))
+
+    expected_names = {name for name, _ in expected}
+    managed_names = {'Storage', 'Data', 'Config'}
+    for name, target in expected:
+        link = {'name': name, 'category': 'source', 'target': target,
+                'icon': '', 'sourceName': name}
+        index = next((i for i, item in enumerate(links)
+                      if item.get('category', '').split('-')[0] == 'source' and
+                      item.get('sourceName') == name), None)
+        if index is None and name == 'Data':
+            # Replace the stock cloud Storage shortcut in place for local tenants.
+            index = next((i for i, item in enumerate(links)
+                          if item.get('category', '').split('-')[0] == 'source' and
+                          item.get('sourceName') == 'Storage'), None)
+        if index is None:
+            links.append(link)
+        else:
+            links[index] = link
+
+    links = [item for item in links
+             if not (item.get('category', '').split('-')[0] == 'source' and
+                     item.get('sourceName') in managed_names and
+                     item.get('sourceName') not in expected_names)]
     if not expected:
         raise ValueError('No accessible managed sources are ready')
     path = '/api/users?' + urlencode({'username': user['username']})
@@ -53,7 +72,7 @@ def initialize(config, marker, api):
     fd, temp = tempfile.mkstemp(prefix='.sidebar-', dir=marker.parent)
     try:
         with os.fdopen(fd, 'w') as stream:
-            json.dump({'version': 1, 'username': user['username'], 'sources': expected}, stream)
+            json.dump({'version': 2, 'username': user['username'], 'sources': [name for name, _ in expected]}, stream)
         os.replace(temp, marker)
     finally:
         if os.path.exists(temp): os.unlink(temp)
@@ -69,7 +88,7 @@ def main():
     base = 'http://127.0.0.1:' + str(http.get('port', 80)) + '/' + str(http.get('baseURL', '')).strip('/')
     base = base.rstrip('/')
     database = Path(config['server']['database']['path'])
-    marker = database.with_name(database.name + '.sidebar-v1.json')
+    marker = database.with_name(database.name + '.sidebar-v2.json')
     def api(method, path, body=None):
         request = Request(base + path, method=method,
                           data=json.dumps(body).encode() if body is not None else None,
