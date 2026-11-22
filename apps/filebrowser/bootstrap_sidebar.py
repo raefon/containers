@@ -66,7 +66,7 @@ def initialize(config, marker, api):
         api('PATCH', path, {'which': ['sidebarLinks'], 'data': {'sidebarLinks': links}})
     verified = api('GET', '/api/users?username=self').get('sidebarLinks') or []
     if any(not any(x.get('sourceName') == name and x.get('category', '').startswith('source')
-                   for x in verified) for name in expected):
+                   for x in verified) for name, _ in expected):
         raise ValueError('Sidebar update was not verified')
     marker.parent.mkdir(parents=True, exist_ok=True)
     fd, temp = tempfile.mkstemp(prefix='.sidebar-', dir=marker.parent)
