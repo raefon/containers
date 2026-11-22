@@ -49,7 +49,7 @@ def migrate(config_file):
                set(s.get('config', {})) - {'defaultEnabled'} for s in legacy_sources):
             raise ValueError('Custom /srv source settings require explicit permission/rule migration')
         sources[:] = [s for s in sources if s.get('path') != '/srv']
-    for source, name in (('/storage', 'Storage'), ('/config', 'Config')):
+    for source, name in (('/storage', 'Storage'), ('/data', 'Data'), ('/config', 'Config')):
         if not any(s.get('path') == source for s in sources):
             sources.append({'path': source, 'name': name, 'config': {'defaultEnabled': True}})
     if config == yaml.safe_load(original): return False

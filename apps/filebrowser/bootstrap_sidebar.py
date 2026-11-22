@@ -16,6 +16,13 @@ def initialize(config, marker, api):
     marker = Path(marker)
     if marker.exists():
         return 'already initialized'
+    previous_marker = marker.with_name(marker.name.replace('sidebar-v2', 'sidebar-v1'))
+    previous_sources = set()
+    if previous_marker != marker and previous_marker.is_file():
+        try:
+            previous_sources = set(json.loads(previous_marker.read_text()).get('sources', []))
+        except (OSError, ValueError, TypeError):
+            raise ValueError('Previous sidebar marker is invalid; refusing to change saved links') from None
     if config.get('auth', {}).get('methods', {}).get('noauth') is not True:
         return 'skipped: authentication is not noauth'
     user = api('GET', '/api/users?username=self')
@@ -25,11 +32,15 @@ def initialize(config, marker, api):
     links = list(user.get('sidebarLinks') or [])
     expected = []
     for source in config.get('server', {}).get('sources', []):
-        if source.get('path') not in ('/storage', '/config'):
+        if source.get('path') not in ('/storage', '/data', '/config'):
             continue
         if source.get('config', {}).get('defaultEnabled') is not True:
             continue
         name = source.get('name') or Path(source['path']).name
+        # On upgrade, only add sources introduced since the previous bootstrap;
+        # preserve intentional sidebar removals for Storage and Config.
+        if name in previous_sources:
+            continue
         scope = scopes.get(name)
         if not scope:
             raise ValueError('Managed source grants are not ready')
@@ -53,7 +64,7 @@ def initialize(config, marker, api):
     fd, temp = tempfile.mkstemp(prefix='.sidebar-', dir=marker.parent)
     try:
         with os.fdopen(fd, 'w') as stream:
-            json.dump({'version': 1, 'username': user['username'], 'sources': expected}, stream)
+            json.dump({'version': 2, 'username': user['username'], 'sources': expected}, stream)
         os.replace(temp, marker)
     finally:
         if os.path.exists(temp): os.unlink(temp)
@@ -69,7 +80,7 @@ def main():
     base = 'http://127.0.0.1:' + str(http.get('port', 80)) + '/' + str(http.get('baseURL', '')).strip('/')
     base = base.rstrip('/')
     database = Path(config['server']['database']['path'])
-    marker = database.with_name(database.name + '.sidebar-v1.json')
+    marker = database.with_name(database.name + '.sidebar-v2.json')
     def api(method, path, body=None):
         request = Request(base + path, method=method,
                           data=json.dumps(body).encode() if body is not None else None,

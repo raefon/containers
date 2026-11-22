@@ -9,6 +9,10 @@ server:
       name: Storage
       config:
         defaultEnabled: true
+    - path: /data
+      name: Data
+      config:
+        defaultEnabled: true
     - path: /config
       name: Config
       config:
