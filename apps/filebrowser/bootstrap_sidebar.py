@@ -16,11 +16,14 @@ def initialize(config, marker, api):
     marker = Path(marker)
     if marker.exists():
         return 'already initialized'
-    previous_marker = marker.with_name(marker.name.replace('sidebar-v2', 'sidebar-v1'))
     previous_sources = set()
-    if previous_marker != marker and previous_marker.is_file():
+    for version in (1, 2):
+        old_name = marker.name.replace('sidebar-v3', f'sidebar-v{version}')
+        old_marker = marker.with_name(old_name)
+        if old_marker == marker or not old_marker.is_file():
+            continue
         try:
-            previous_sources = set(json.loads(previous_marker.read_text()).get('sources', []))
+            previous_sources.update(json.loads(old_marker.read_text()).get('sources', []))
         except (OSError, ValueError, TypeError):
             raise ValueError('Previous sidebar marker is invalid; refusing to change saved links') from None
     if config.get('auth', {}).get('methods', {}).get('noauth') is not True:
@@ -30,28 +33,32 @@ def initialize(config, marker, api):
         raise ValueError('Filebrowser user is not ready')
     scopes = {s['name']: s for s in user['scopes']}
     links = list(user.get('sidebarLinks') or [])
+    sources = [s for s in config.get('server', {}).get('sources', [])
+               if s.get('path') in ('/storage', '/data', '/config')
+               and s.get('config', {}).get('defaultEnabled') is True]
+    active_names = {s.get('name') or Path(s['path']).name for s in sources}
+    stale = previous_sources - active_names
+    if stale:
+        links = [x for x in links if not (
+            x.get('category', '').split('-')[0] == 'source' and x.get('sourceName') in stale)]
     expected = []
-    for source in config.get('server', {}).get('sources', []):
-        if source.get('path') not in ('/storage', '/data', '/config'):
-            continue
-        if source.get('config', {}).get('defaultEnabled') is not True:
-            continue
+    for source in sources:
         name = source.get('name') or Path(source['path']).name
-        # On upgrade, only add sources introduced since the previous bootstrap;
-        # preserve intentional sidebar removals for Storage and Config.
-        if name in previous_sources:
-            continue
         scope = scopes.get(name)
         if not scope:
             raise ValueError('Managed source grants are not ready')
         if not scope.get('permissions', {}).get('view'):
+            continue
+        if name in previous_sources:
+            # Preserve manual removals of links created by an older bootstrap.
             continue
         expected.append(name)
         if any(x.get('category', '').split('-')[0] == 'source' and x.get('sourceName') == name for x in links):
             continue
         links.append({'name': name, 'category': 'source', 'target': scope.get('scope') or '/',
                       'icon': '', 'sourceName': name})
-    if not expected:
+    had_previous = bool(previous_sources)
+    if not expected and not stale and not had_previous:
         raise ValueError('No accessible managed sources are ready')
     path = '/api/users?' + urlencode({'username': user['username']})
     if links != (user.get('sidebarLinks') or []):
@@ -60,11 +67,15 @@ def initialize(config, marker, api):
     if any(not any(x.get('sourceName') == name and x.get('category', '').startswith('source')
                    for x in verified) for name in expected):
         raise ValueError('Sidebar update was not verified')
+    if any(any(x.get('sourceName') == name and x.get('category', '').startswith('source')
+               for x in verified) for name in stale):
+        raise ValueError('Retired managed sidebar link was not removed')
     marker.parent.mkdir(parents=True, exist_ok=True)
     fd, temp = tempfile.mkstemp(prefix='.sidebar-', dir=marker.parent)
     try:
         with os.fdopen(fd, 'w') as stream:
-            json.dump({'version': 2, 'username': user['username'], 'sources': expected}, stream)
+            json.dump({'version': 3, 'username': user['username'],
+                       'sources': sorted(active_names)}, stream)
         os.replace(temp, marker)
     finally:
         if os.path.exists(temp): os.unlink(temp)
@@ -80,7 +91,7 @@ def main():
     base = 'http://127.0.0.1:' + str(http.get('port', 80)) + '/' + str(http.get('baseURL', '')).strip('/')
     base = base.rstrip('/')
     database = Path(config['server']['database']['path'])
-    marker = database.with_name(database.name + '.sidebar-v2.json')
+    marker = database.with_name(database.name + '.sidebar-v3.json')
     def api(method, path, body=None):
         request = Request(base + path, method=method,
                           data=json.dumps(body).encode() if body is not None else None,

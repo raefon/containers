@@ -5,10 +5,9 @@ The image targets Quantum v2 configuration:
 - `http.port: 80`
 - `server.database.path: /config/filebrowser/data/filebrowser.sqlite` for fresh installs
 - Cache under `/config/filebrowser/data/tmp`
-- Direct `Storage` (`/storage`), `Data` (`/data`) and `Config` (`/config`) sources
+- Direct `Storage` source (`/storage` for cloud or `/data` for local) and `Config` (`/config`) source
 
-Mount tenant media and provider CSI storage under `/storage`, and the tenant's
-persistent configuration volume at `/config`. Do not mount another tenant's data.
+Cloud tenants mount provider storage under `/storage`; local tenants mount their NFS share under `/data` and set `FILEBROWSER_STORAGE_MODE=local`. Both profiles mount the tenant's persistent configuration volume at `/config`. Do not mount another tenant's data.
 The image no longer creates `/srv/data` or `/srv/config` symlinks. On startup it
 unlinks only those exact legacy aliases when they point to `/data` and `/config`;
 custom links, directories and the targets are never removed.
@@ -48,9 +47,8 @@ References:
 - https://filebrowserquantum.com/en/docs/configuration/sources/
 
 On startup, `bootstrap_sidebar.py` waits up to 90 seconds for the local API and
-seeds Storage, Data and Config sidebar links once for the no-auth account. On upgrade from v1, it adds only the new Data link and preserves manual removals of the existing links. Source
-permissions and scoped paths are preserved; custom links are retained. The
-marker beside the configured database (`<database>.sidebar-v2.json`) is written
+seeds Storage and Config sidebar links once for the no-auth account. Storage maps to `/storage` in cloud mode and `/data` in local mode. On upgrade, it removes an obsolete duplicate storage link while preserving manual link removals, custom links, permissions and scopes. The
+marker beside the configured database (`<database>.sidebar-v3.json`) is written
 only after API readback confirms the links. Later restarts preserve manual
 sidebar removals and ordering. This fixes sidebar visibility independently of
 source grants; it never grants access to another source. Custom authentication
@@ -59,4 +57,4 @@ is skipped. Set `FILEBROWSER_INIT_SIDEBAR=false` to disable this bootstrap.
 The helper uses the API rather than writing SQLite directly. Filebrowser remains
 PID 1; a failed bootstrap logs an error and is retried on the next restart without
 preventing the server from running. To deliberately retry a completed bootstrap,
-remove only its `.sidebar-v2.json` marker and restart the container.
+remove only its `.sidebar-v3.json` marker and restart the container.
