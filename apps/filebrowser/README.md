@@ -5,9 +5,11 @@ The image targets Quantum v2 configuration:
 - `http.port: 80`
 - `server.database.path: /config/filebrowser/data/filebrowser.sqlite` for fresh installs
 - Cache under `/config/filebrowser/data/tmp`
-- Direct `Storage` (`/storage`) and `Config` (`/config`) sources
+- Cloud profile: `Storage` (`/storage`) and `Config` (`/config`) sources
+- Local profile: set `FILEBROWSER_DATA_PATH=/data` and
+  `FILEBROWSER_DATA_NAME=Data` to expose `Data` (`/data`) and `Config`
 
-Mount tenant media and provider CSI storage under `/storage`, and the tenant's
+Mount the tenant's selected media source at its configured data path and its
 persistent configuration volume at `/config`. Do not mount another tenant's data.
 The image no longer creates `/srv/data` or `/srv/config` symlinks. On startup it
 unlinks only those exact legacy aliases when they point to `/data` and `/config`;
@@ -17,7 +19,9 @@ custom links, directories and the targets are never removed.
 settings and already-configured SQLite paths (including manually fixed
 `filebrowser.db` paths). It normalizes a legacy database string into the v2 object,
 moves an old server port into `http.port`, and replaces only the stock `/srv` source
-with direct sources. Config changes are atomic, with the original saved as
+with direct sources. `FILEBROWSER_DATA_PATH` and `FILEBROWSER_DATA_NAME` select
+the managed data source label and path; defaults remain `Storage` and `/storage`.
+Config changes are atomic, with the original saved as
 `config.yaml.before-direct-sources`. Existing non-/srv sources are retained.
 Custom /srv access rules cause a failure requiring explicit migration rather than
 silently discarding restrictions. Existing shares/scopes tied to /srv may need
@@ -48,15 +52,17 @@ References:
 - https://filebrowserquantum.com/en/docs/configuration/sources/
 
 On startup, `bootstrap_sidebar.py` waits up to 90 seconds for the local API and
-seeds Storage and Config sidebar links once for the no-auth account. Source
-permissions and scoped paths are preserved; custom links are retained. The
-marker beside the configured database (`<database>.sidebar-v1.json`) is written
-only after API readback confirms the links. Later restarts preserve manual
-sidebar removals and ordering. This fixes sidebar visibility independently of
+seeds the configured data source and Config sidebar links for the no-auth account.
+When switching from the stock Storage source to Data, it updates the existing
+Storage shortcut in place and removes the stale source shortcut. Source permissions
+and scoped paths are preserved; custom links are retained. The marker beside the
+configured database (`<database>.sidebar-v2.json`) is written only after API
+readback confirms the links. Later restarts preserve manual sidebar removals and
+ordering. This fixes sidebar visibility independently of
 source grants; it never grants access to another source. Custom authentication
 is skipped. Set `FILEBROWSER_INIT_SIDEBAR=false` to disable this bootstrap.
 
 The helper uses the API rather than writing SQLite directly. Filebrowser remains
 PID 1; a failed bootstrap logs an error and is retried on the next restart without
 preventing the server from running. To deliberately retry a completed bootstrap,
-remove only its `.sidebar-v1.json` marker and restart the container.
+remove only its `.sidebar-v2.json` marker and restart the container.
