@@ -49,9 +49,22 @@ def migrate(config_file):
                set(s.get('config', {})) - {'defaultEnabled'} for s in legacy_sources):
             raise ValueError('Custom /srv source settings require explicit permission/rule migration')
         sources[:] = [s for s in sources if s.get('path') != '/srv']
-    for source, name in (('/storage', 'Storage'), ('/config', 'Config')):
-        if not any(s.get('path') == source for s in sources):
-            sources.append({'path': source, 'name': name, 'config': {'defaultEnabled': True}})
+    data_path = os.environ.get('FILEBROWSER_DATA_PATH', '/storage').strip()
+    data_name = os.environ.get('FILEBROWSER_DATA_NAME', 'Storage').strip()
+    if not data_path.startswith('/') or data_path == '/config' or not data_name:
+        raise ValueError('FILEBROWSER_DATA_PATH must be an absolute data path and FILEBROWSER_DATA_NAME must be non-empty')
+
+    managed_data = next((source for source in sources
+                         if source.get('path') in ('/storage', '/data') and
+                         source.get('name') in ('Storage', 'Data')), None)
+    if managed_data:
+        managed_data['path'] = data_path
+        managed_data['name'] = data_name
+    elif not any(source.get('path') == data_path for source in sources):
+        sources.append({'path': data_path, 'name': data_name, 'config': {'defaultEnabled': True}})
+
+    if not any(source.get('path') == '/config' for source in sources):
+        sources.append({'path': '/config', 'name': 'Config', 'config': {'defaultEnabled': True}})
     if config == yaml.safe_load(original): return False
     backup = path.with_name(path.name + '.before-direct-sources')
     if not backup.exists(): shutil.copy2(path, backup)
